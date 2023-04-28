@@ -1,10 +1,9 @@
 import {useState, useContext} from 'react'
 import {Navigate} from 'react-router-dom'
-import { UserContext } from '../context/user';
 
 function Login ({setLog, logStatus}) {
     const [changeForm, setchangeForm] = useState(true); //true = login, false = signup
-    const {user, setUser} = useContext(UserContext)
+    // const {user, setUser} = useContext(UserContext)
     console.log('log status from app:', logStatus)
 
     let handleSubmitLogin = (e) => {
@@ -34,14 +33,14 @@ function Login ({setLog, logStatus}) {
         .then(rbody => {
             setLog(true);
             console.log(rbody);
-            setUser({
-                'id': rbody.id,
-                'name': rbody.name,
-                'age': rbody.age,
-                'email': rbody.email,
-                'username': rbody.username,
-                'accountType': rbody.account_type
-            });
+            // setUser({
+            //     'id': rbody.id,
+            //     'name': rbody.name,
+            //     'age': rbody.age,
+            //     'email': rbody.email,
+            //     'username': rbody.username,
+            //     'accountType': rbody.account_type
+            // });
         })
     }
 

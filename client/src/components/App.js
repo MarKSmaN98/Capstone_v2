@@ -1,5 +1,5 @@
 //Mark Coats Capstone Project 03/25/2023
-import {React, useState, useRef, useEffect, createContext} from 'react';
+import {React, useState, useRef, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Cart from './Cart';
 import Homepage from './Homepage';
@@ -13,9 +13,6 @@ import { UserProvider } from '../context/user';
 function App() {
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isWaiting, setisWaiting] = useState(true);
-  console.log('isWaiting', isWaiting);
-  const logRef = useRef({});
-  logRef.current=isLoggedIn;
   document.title = "Mark's Site";
 
   useEffect(() => {
@@ -45,7 +42,6 @@ function App() {
       <div className="App">
         {console.log('app login status', isLoggedIn)}
         <Navbar />
-        <UserProvider>
           <Routes>
             <Route 
               element={< Homepage />}
@@ -59,16 +55,17 @@ function App() {
               element={< Cart />}
               path='/cart'
               />
-            <Route 
-              element={< Account setLog={loginHandler} logStatus={isLoggedIn} wait={isWaiting} />}
-              path='/account'
-              />
+            <UserProvider>
+              <Route 
+                element={< Account setLog={loginHandler} logStatus={isLoggedIn} wait={isWaiting} />}
+                path='/account'
+                />
+            </UserProvider>
             <Route 
               element={< Login setLog={loginHandler} logStatus={isLoggedIn} />}
               path='/login'
               />
           </Routes>
-        </UserProvider>
         
         
       </div>
