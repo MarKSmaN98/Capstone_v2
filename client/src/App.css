@@ -1,0 +1,49 @@
+.navbar {
+    background-color: rgb(171, 212, 218);
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+}
+
+.navbar img{
+    height: 40px;
+    width: auto;
+    padding:0px;
+}
+
+.navbar a {
+    justify-content: space-between;
+    justify-self: center;
+    background-color: rgb(30, 30, 78);
+    padding: 10px;
+    color: white;
+
+}
+
+
+.navbar a:link { text-decoration: none; }
+
+
+.navbar a:visited { text-decoration: none; }
+
+
+.navbar a:hover { text-decoration: none; }
+
+
+.navbar a:active { text-decoration: none; }
+
+.loginMain {
+    background-color: lightgray;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    height: 1080px;
+    
+}
+
+.App {
+    background-color: lightgray;
+}
