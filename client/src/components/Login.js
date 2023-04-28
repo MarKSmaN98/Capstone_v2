@@ -1,10 +1,10 @@
-import {useState, createContext} from 'react'
+import {useState, useContext} from 'react'
 import {Navigate} from 'react-router-dom'
+import { UserContext } from '../context/user';
 
 function Login ({setLog, logStatus}) {
     const [changeForm, setchangeForm] = useState(true); //true = login, false = signup
-    const [user, setUser] = useState({});
-    const UserContext = createContext();
+    const {user, setUser} = useContext(UserContext)
     console.log('log status from app:', logStatus)
 
     let handleSubmitLogin = (e) => {
@@ -18,11 +18,11 @@ function Login ({setLog, logStatus}) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'username':'markusername'
+                'username':front_username
             })
         })
         .then(r => {
-            e.target.password.value = ''
+            e.target.password.value = '';
             if (r.ok) {
                 return r.json()
             }
@@ -35,13 +35,13 @@ function Login ({setLog, logStatus}) {
             setLog(true);
             console.log(rbody);
             setUser({
-                id: rbody.id,
-                name: rbody.name,
-                age: rbody.age,
-                email: rbody.email,
-                username: rbody.username
+                'id': rbody.id,
+                'name': rbody.name,
+                'age': rbody.age,
+                'email': rbody.email,
+                'username': rbody.username,
+                'accountType': rbody.account_type
             });
-            console.log(user);
         })
     }
 
@@ -87,15 +87,12 @@ function Login ({setLog, logStatus}) {
                     <p>Forgot your password?</p>
                 </form>
                 <div id='signup'>
-                <br></br>
-                <br></br>
-                <br></br>
-                <p>Don't have an account? Sign up!</p>
-                <button onClick={() => {setchangeForm(!changeForm)}} id='signupbtn'>Sign Up</button>
-            </div>
-            <UserContext.Provider value={user}>
-
-            </UserContext.Provider>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <p>Don't have an account? Sign up!</p>
+                    <button onClick={() => {setchangeForm(!changeForm)}} id='signupbtn'>Sign Up</button>
+                </div>
             </div>
         )
     }

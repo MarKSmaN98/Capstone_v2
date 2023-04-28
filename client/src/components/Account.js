@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react'
+import {useContext} from 'react'
 import { Navigate } from 'react-router-dom'
-function Account ({logStatus, setLog, isWaiting}) {
+function Account ({logStatus, setLog}) {
     console.log('initial status check', logStatus)
 
 
