@@ -1,15 +1,15 @@
 import {useContext} from 'react'
 import { Navigate } from 'react-router-dom'
 import { UserContext } from '../context/user'
-function Account ({logStatus, setLog}) {
-    console.log('initial status check', logStatus)
-
+function Account () {
     const {user, setUser} = useContext(UserContext)
+    console.log('initial status check', user)
+    fetch('http://localhost:5555/check').then(r => r.json()).then(body => console.log(body))
 
     console.log('user = ', user)
 
     if (user !== null) {
-        document.title=`$${user}'s Account`
+        document.title=`${user.name}'s Account`
     }
 
 
@@ -18,8 +18,9 @@ function Account ({logStatus, setLog}) {
             .then(r => {})
             .then(() => {
                 console.log('logout handler called')
-                setLog(false)
+                setUser(null)
             })
+        console.log('logout')
     }
     
     let loggedinDisp = () => {
@@ -45,9 +46,9 @@ function Account ({logStatus, setLog}) {
         )
     }
 
-    let dispChange = logStatus? loggedinDisp() : loggedoutDisp()
+    let dispChange = user? loggedinDisp() : loggedoutDisp()
 
-    console.log('at return', logStatus)
+    console.log('at return', user)
     return (
         <div>
             Account

@@ -1,5 +1,5 @@
 //Mark Coats Capstone Project 03/25/2023
-import {React, useState, useRef, useEffect} from 'react';
+import {React, useState, useRef, useContext, useEffect} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Cart from './Cart';
 import Homepage from './Homepage';
@@ -11,39 +11,10 @@ import '../App.css';
 import { UserProvider } from '../context/user';
 
 function App() {
-  const [isLoggedIn, setisLoggedIn] = useState(false);
-  const [isWaiting, setisWaiting] = useState(true);
-  // const [user, setUser] = useState(null)
   document.title = "Mark's Site";
 
-  useEffect(() => {
-    async function checkLogin() {
-      await fetch('http://localhost:5555/check')
-        .then( r => {
-          if (r.ok){
-            setisLoggedIn(true);
-          }
-          else {
-            setisLoggedIn(false);
-          }
-          return r.json()
-        })
-        .then(body => {
-          setisWaiting(false)
-          console.warn(body)
-        })
-    }
-    checkLogin();
-  }, [isLoggedIn]);
-
-  let loginHandler = (boo) => {
-    setisLoggedIn(boo);
-  }
-
-  let appHandler = () => {
-    return (
+  return (
       <div className="App">
-        {console.log('app login status', isLoggedIn)}
         <Navbar />
         <UserProvider>
           <Routes>
@@ -60,11 +31,11 @@ function App() {
               path='/cart'
               />
               <Route 
-                element={< Account setLog={loginHandler} logStatus={isLoggedIn} wait={isWaiting} />}
+                element={< Account />}
                 path='/account'
                 />
             <Route 
-              element={< Login setLog={loginHandler} logStatus={isLoggedIn} />}
+              element={< Login />}
               path='/login'
               />
           </Routes>
@@ -72,14 +43,6 @@ function App() {
         
         
       </div>
-    );
-  }
-  return (
-    <div>
-      {
-        isWaiting? <></> : appHandler()
-      }
-    </div>
   )
   
 }

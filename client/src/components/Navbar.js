@@ -6,11 +6,11 @@ function Navbar () {
 
     return (
         <nav className='navbar navbar-dark-grey text-center'>
-            <a href='/'>Home</a>
-            <a href='/products'>Products</a>
+            <Link to='/' >Home</Link>
+            <Link to='/products'>Products</Link>
             <img src='../images/logo.png' />
-            <a href='/cart'>Cart</a>
-            <a href='/account'>Account</a>
+            <Link to='/cart'>Cart</Link>
+            <Link to='/account'>Account</Link>
         </nav>
     )
 }

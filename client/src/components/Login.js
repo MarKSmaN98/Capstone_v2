@@ -1,10 +1,10 @@
 import {useState, useContext} from 'react'
 import {Navigate} from 'react-router-dom'
 import { UserContext } from '../context/user';
-function Login ({setLog, logStatus}) {
+function Login () {
     const [changeForm, setchangeForm] = useState(true); //true = login, false = signup
     const {user, setUser} = useContext(UserContext)
-    console.log('log status from app:', logStatus)
+    console.log('log status from app:', user)
 
     let handleSubmitLogin = (e) => {
         e.preventDefault();
@@ -24,6 +24,7 @@ function Login ({setLog, logStatus}) {
         .then(r => {
             e.target.password.value = '';
             if (r.ok) {
+                console.log('login r.ok', r.ok)
                 return r.json()
             }
             else {
@@ -32,7 +33,6 @@ function Login ({setLog, logStatus}) {
             
         })
         .then(rbody => {
-            setLog(true);
             console.log(rbody);
             setUser(rbody)
         })
@@ -131,7 +131,7 @@ function Login ({setLog, logStatus}) {
             </div>
             <br></br>
             {changeForm? loginForm() : signupForm()}
-            {logStatus? <Navigate replace to='/account'/> : console.log('')}
+            {user? <Navigate replace to='/account'/> : console.log('')}
         </div>
     )
 
