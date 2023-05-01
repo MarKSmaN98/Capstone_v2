@@ -3,7 +3,6 @@ from flask_restful import Resource
 from config import app, db, api
 from models import User, Cart, Item, CartItem
 from flask_bcrypt import Bcrypt
-bcrypt = Bcrypt(app)
 
 
 #Routes_____________________________________________

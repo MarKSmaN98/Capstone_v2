@@ -6,7 +6,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db
 from datetime import datetime
-#from app import bcrypt
+from config import bcrypt
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -17,25 +17,25 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    password = db.Column(db.String(120), nullable=False)
+    _password = db.Column(db.String(120), nullable=False)
     account_type = db.Column(db.Integer, nullable=False, default=0) #0 is normal user, 1 is seller
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_carts = db.relationship('Cart', backref='user', lazy=True)
 
-    # @hybrid_property
-    # def password(self):
-    #     return self._password
+    @hybrid_property
+    def password(self):
+        return self._password
     
-    # @password.setter
-    # def password(self, password):
-    #     password_hash = bcrypt.generate_password_hash(
-    #         password.encode('utf-8'))
-    #     self.password = password_hash.decode('utf-8')
+    @password.setter
+    def password(self, password):
+        password_hash = bcrypt.generate_password_hash(
+            password.encode('utf-8'))
+        self.password = password_hash.decode('utf-8')
     
-    # def authenticate(self, password):
-    #     return bcrypt.check_password_hash(
-    #         self.password, password.encode('utf-8')
-    #     )
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(
+            self.password, password.encode('utf-8')
+        )
 
 class Cart(db.Model, SerializerMixin):
     __tablename__ = 'carts'

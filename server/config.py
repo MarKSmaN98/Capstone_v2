@@ -6,6 +6,7 @@ from flask_restful import Api
 from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import _AssociationList
 from flask.json.provider import JSONProvider
+from flask_bcrypt import Bcrypt
 
 class CustomJSONEncoder(JSONProvider):
     def default(self, obj):
@@ -14,9 +15,11 @@ class CustomJSONEncoder(JSONProvider):
         return super().default(obj)
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.secret_key='A1B2C3!'
+
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",

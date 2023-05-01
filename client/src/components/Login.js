@@ -11,13 +11,14 @@ function Login ({setLog, logStatus}) {
         let front_username = e.target.username.value;
         let password = e.target.password.value;
         console.log(front_username + ' ' + password);
-        fetch('/backlogin', {
+        fetch('http://localhost:5555/backlogin', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'username':front_username
+                'username':front_username,
+                'password':password
             })
         })
         .then(r => {
@@ -33,14 +34,7 @@ function Login ({setLog, logStatus}) {
         .then(rbody => {
             setLog(true);
             console.log(rbody);
-            setUser({
-                'id': rbody.id,
-                'name': rbody.name,
-                'age': rbody.age,
-                'email': rbody.email,
-                'username': rbody.username,
-                'accountType': rbody.account_type
-            });
+            setUser(rbody)
         })
     }
 

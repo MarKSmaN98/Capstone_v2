@@ -8,17 +8,17 @@ import Products from './Products';
 import Account from './Account'
 import Login from './Login'
 import '../App.css';
-import { UserContext } from '../context/user';
+import { UserProvider } from '../context/user';
 
 function App() {
   const [isLoggedIn, setisLoggedIn] = useState(false);
   const [isWaiting, setisWaiting] = useState(true);
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   document.title = "Mark's Site";
 
   useEffect(() => {
     async function checkLogin() {
-      await fetch('/check')
+      await fetch('http://localhost:5555/check')
         .then( r => {
           if (r.ok){
             setisLoggedIn(true);
@@ -43,7 +43,7 @@ function App() {
       <div className="App">
         {console.log('app login status', isLoggedIn)}
         <Navbar />
-        <UserContext.Provider value={{user, setUser}}>
+        <UserProvider>
           <Routes>
             <Route 
               element={< Homepage />}
@@ -66,7 +66,7 @@ function App() {
               path='/login'
               />
           </Routes>
-        </UserContext.Provider>
+        </UserProvider>
         
         
       </div>

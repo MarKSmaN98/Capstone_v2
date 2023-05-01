@@ -8,6 +8,10 @@ function Account ({logStatus, setLog}) {
 
     console.log('user = ', user)
 
+    if (user !== null) {
+        document.title=`$${user}'s Account`
+    }
+
 
     let logoutHandler = () => {
         fetch('/logout', {method: 'DELETE'})

@@ -11,7 +11,7 @@ function Cart () {
     const [iswaiting, setiswaiting] = useState(true)
     const [stateItems, setStateItems] = useState([])
     useEffect(() => {
-        fetch('/check')
+        fetch('http://localhost:5555/check')
             .then(r=>r.json())
             .then(body => {
                 setUserData(body)
@@ -22,6 +22,7 @@ function Cart () {
                         setCarts(body)
                         console.log('carts fetch',body)
                         setCurrentCart(body[0])
+                        setStateItems(body[0].items)
                         setiswaiting(false)
                     })
                     //Want to rant... I stg I was getting a 500 server error with this fetch, _AssociationList is not JSON serializable
@@ -51,7 +52,8 @@ function Cart () {
                 fetch(`/cart_items/${body}`, {
                     method:'DELETE'
                 })
-                
+                let temp = [...stateItems].pop(e.target.id -1)
+                setStateItems(temp)
             })
         
     }
@@ -59,8 +61,9 @@ function Cart () {
     let updateQuantity = (e) => {
 
     }
-        
-    let renderItemList = currentCart.items.map((item) => {
+    
+    console.log('error log' ,stateItems)
+    let renderItemList = stateItems.map((item) => {
         return (
             <div key={`itemlist${item.id}`}>
                 {item.title}
@@ -73,8 +76,11 @@ function Cart () {
     })
 
     let handleSelectChange = (e) => {
+        console.log('stateItems', stateItems)
         setCurrentCart(carts[e.target.value -1])
         console.log(e.target.value-1, '= cartiD')
+        setStateItems(currentCart.items)
+        console.log(stateItems)
     }
 
     return (
