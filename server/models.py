@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
 from config import db
 from datetime import datetime
+#from app import bcrypt
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
-    serialize_rules = ('-user_carts', '-cart.cart_user')
+    serialize_rules = ('user_carts', '-cart.cart_user' )
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)    
@@ -16,13 +18,28 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    type = db.Column(db.Integer, nullable=False, default=0) #0 is normal user, 1 is seller
+    account_type = db.Column(db.Integer, nullable=False, default=0) #0 is normal user, 1 is seller
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_carts = db.relationship('Cart', backref='user', lazy=True)
 
+    # @hybrid_property
+    # def password(self):
+    #     return self._password
+    
+    # @password.setter
+    # def password(self, password):
+    #     password_hash = bcrypt.generate_password_hash(
+    #         password.encode('utf-8'))
+    #     self.password = password_hash.decode('utf-8')
+    
+    # def authenticate(self, password):
+    #     return bcrypt.check_password_hash(
+    #         self.password, password.encode('utf-8')
+    #     )
+
 class Cart(db.Model, SerializerMixin):
     __tablename__ = 'carts'
-    serialize_rules = ('-items.cart', '-cart.cart_items', '-cart.cart_user', '-cart_items.cart')
+    serialize_rules = ('-cart_items', '-user', 'items')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -32,9 +49,30 @@ class Cart(db.Model, SerializerMixin):
     items = association_proxy('cart_items', 'item')
     cart_items = db.relationship('CartItem', backref='cart')
 
+    def get_items(self):
+        new_cart_items = CartItem.query.filter_by(cart_id=self.id).all()
+        items = [cart_item.item.to_dict() for cart_item in new_cart_items]
+        return items
+    
+    def getQuantityForItem(self, itemID):
+        target = CartItem.query.filter(CartItem.cart_id == self.id, CartItem.item_id == itemID).first()
+        if target == None:
+            return 0
+        return target.quantity
+        
+
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'paid': self.paid,
+    #         'user_id': self.user_id,
+    #         'items': self.get_items()
+    #     }
+
 class Item (db.Model, SerializerMixin):
     __tablename__ = 'items'
-    serialize_rules = ('-cart_items.cart', '-cart_items', '-cart_items.item', '-cart.items')
+    serialize_rules = ('-cart', '-cart_items')
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -46,11 +84,18 @@ class Item (db.Model, SerializerMixin):
 
 class CartItem(db.Model, SerializerMixin):
     __tablename__ = 'cart_items'
-    serialize_rules = ('-cart.cart_items', '-item.cart_items')
+    serialize_rules = ('-cart.cart_items', '-item.cart_items', '-cart', '-item.cart', '-cart_id')
 
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'))
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'item': self.item.to_dict(),
+            'quantity': self.quantity
+        }
 
 

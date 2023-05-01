@@ -1,7 +1,12 @@
 import {useContext} from 'react'
 import { Navigate } from 'react-router-dom'
+import { UserContext } from '../context/user'
 function Account ({logStatus, setLog}) {
     console.log('initial status check', logStatus)
+
+    const {user, setUser} = useContext(UserContext)
+
+    console.log('user = ', user)
 
 
     let logoutHandler = () => {

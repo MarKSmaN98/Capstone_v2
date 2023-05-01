@@ -28,7 +28,7 @@ with app.app_context():
     ci = CartItem(cart_id=1, item_id=1)
     db.session.add(ci)
     db.session.commit()
-    ci = CartItem(cart_id=1, item_id=3)
+    ci = CartItem(cart_id=1, item_id=3, quantity=4)
     db.session.add(ci)
     db.session.commit()
     ci = CartItem(cart_id=2, item_id=2)

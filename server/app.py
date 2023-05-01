@@ -1,8 +1,9 @@
-from flask import Flask, session, request, make_response
+from flask import Flask, session, request, make_response, jsonify
 from flask_restful import Resource
 from config import app, db, api
 from models import User, Cart, Item, CartItem
 from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt(app)
 
 
 #Routes_____________________________________________
@@ -13,20 +14,17 @@ class Login(Resource):
     def post(self):
         print(request.get_json())
         user = User.query.filter(User.username == request.get_json()['username']).first()
+        password = request.get_json()['password']
         if user == None:
-            resp = make_response({'error':'User Not Found'}, 404)
+            resp = make_response({'error':'User Not Found'}, 401)
             return resp
         else:
-            session['user_id'] = user.id
-            template = {
-                'id': user.id,
-                'name': user.name,
-                'username': user.username,
-                'age': user.age,
-                'email': user.email,
-            }
-            resp = make_response(template, 200)
-            return resp
+            if user.authenticate(password):
+                session['user_id'] = user.id
+                resp = make_response(user.to_dict(), 200)
+                return resp
+            else:
+                return {'error':'Invalid Password'}, 401
 api.add_resource(Login, '/backlogin')
 
 class Logout(Resource):
@@ -52,11 +50,10 @@ class GetCart(Resource):
             template = {
                 'id': cart.id,
                 'name': cart.name,
-                'items' : cart.items,
-                'user_id': cart.user_id,
-                'paid': cart.paid
+                'paid': cart.paid,
+                'items': cart.get_items()
             }
-            cartlist.append(template)
+            cartlist.append(cart.to_dict())
         resp = make_response(cartlist, 200)
         return resp
     def post(self):
@@ -66,14 +63,7 @@ class GetCart(Resource):
         db.session.add(new)
         try:
             db.session.commit()
-            template = {
-                'id': template.id,
-                'name': template.name,
-                'items' : template.items,
-                'user_id': template.user_id,
-                'paid': template.paid
-            }
-            resp = make_response(template, 201)
+            resp = make_response(new.to_dict(), 201)
             return resp
         except:
             resp=make_response({'error':'Cart not added'}, 400)
@@ -82,14 +72,7 @@ api.add_resource(GetCart, '/cart')
 class GetCartById(Resource):
     def get(self, id):
         target = Cart.query.filter(Cart.id == id).first()
-        template = {
-            'id': target.id,
-            'name': target.name,
-            'items' : target.items,
-            'user_id': target.user_id,
-            'paid': target.paid
-        }
-        resp = make_response(template, 200)
+        resp = make_response(target.to_dict(), 200)
         return resp
     def patch(self, id):
         data = request.get_json()
@@ -102,14 +85,7 @@ class GetCartById(Resource):
                 setattr(target, attr, data[attr])
             db.session.add(target)
             db.session.commit()
-            template = {
-                'id': target.id,
-                'name': target.name,
-                'items' : target.items,
-                'user_id': target.user_id,
-                'paid': target.paid
-            }
-            resp = make_response(template, 200)
+            resp = make_response(target, 200)
             return resp
     def delete(self, id):
         target = Cart.query.filter(Cart.id == id).first()
@@ -123,19 +99,22 @@ class GetCartById(Resource):
             return resp
 api.add_resource(GetCartById, '/cart/<int:id>')
 
+class CartByOwner(Resource):
+    def get(self, ownerID):
+        cartList = []
+        for cart in Cart.query.filter(Cart.user_id == ownerID):
+            cartList.append(cart.to_dict())
+        resp = make_response(cartList, 200)
+        return resp
+api.add_resource(CartByOwner, '/cartbyowner/<int:ownerID>')
+
 #Item
 
 class GetItem(Resource):
     def get(self):
         itemlist = []
         for item in Item.query.all():
-            template = {
-                'title': item.title,
-                'tags': item.tags,
-                'price': item.price,
-                'img': item.img,
-            }
-            itemlist.append(template)
+            itemlist.append(item.to_dict())
         resp = make_response(itemlist, 200)
         return resp
     def post(self):
@@ -195,13 +174,7 @@ class GetCartItem(Resource):
     def get(self):
         cartitemlist = []
         for cartItem in CartItem.query.all():
-            template = {
-                'id': cartItem.id,
-                'quantity': cartItem.quantity,
-                'item': cartItem.item,
-                'cart': cartItem.cart
-            }
-            cartitemlist.append(template)
+            cartitemlist.append(cartItem.to_dict())
         resp = make_response(cartitemlist, 200)
         return resp
     def post(self):
@@ -213,13 +186,7 @@ class GetCartItem(Resource):
         db.session.add(new)
         try:
             db.session.commit()
-            template = {
-                'id': new.id,
-                'quantity' :new.quantity,
-                'cart_id': new.cart_id,
-                'item_id': new.item_id
-            }
-            resp = make_response(template, 201)
+            resp = make_response(new.to_dict(), 201)
             return resp
         except:
             resp=make_response({'error':'Item not added to cart'}, 400)
@@ -259,43 +226,37 @@ class GetCartItemById(Resource):
             return resp
 api.add_resource(GetCartItemById, '/cart_items/<int:id>')
 
+class GetCIIDByCandI(Resource):
+    def get(self, cart, item):
+        target = CartItem.query.filter(CartItem.cart_id == cart, CartItem.item_id == item).first()
+        if target == None:
+            return {'error':'nothing found'}, 401
+        resp = make_response(jsonify(target.id), 200) 
+        return resp
+api.add_resource(GetCIIDByCandI, '/getCIID/<int:cart>/<int:item>')
+
 #user
 
 class GetUser(Resource):
     def get(self):
         userlist = []
         for user in User.query.all():
-            template = {
-                'id': user.id,
-                'name': user.name,
-                'username': user.username,
-                'age': user.age,
-                'email': user.email,
-                'password': user.password
-            }
-            userlist.append(template)
+            userlist.append(user.to_dict())
         resp = make_response(userlist, 200)
         return resp
     def post(self):
-        new = CartItem(
+        new = User(
             name = request.get_json()['name'],
             age = request.get_json()['age'],
             username = request.get_json()['username'],
             email = request.get_json()['email'],
-            password = request.get_json()['password']
+            password = request.get_json()['password'],
+            account_type = request.get_json()['type']
         )
         db.session.add(new)
         try:
             db.session.commit()
-            template = {
-                'id': new.id,
-                'name' :new.name,
-                'username': new.username,
-                'age': new.age,
-                'email': new.email,
-                'password': new.password
-            }
-            resp = make_response(template, 201)
+            resp = make_response(new.to_dict(), 201)
             return resp
         except:
             resp=make_response({'error':'User not added'}, 400)
@@ -305,24 +266,15 @@ class GetUserByID(Resource):
     def get(self, id):
         target = User.query.filter(User.id == id).first()
         if target == None:
-            resp = make_response({"error":"Item not found"}, 404)
+            resp = make_response({"error":"User not found"}, 404)
             return resp
         else:
-            template = {
-                'id': target.id,
-                'name' :target.name,
-                'username': target.username,
-                'age': target.age,
-                'email': target.email,
-                'password': target.password,
-                'carts': target.user_carts
-            }
-            resp = make_response(template, 200)
+            resp = make_response(target.to_dict(), 200)
             return resp
     def patch(self, id):
         target = User.query.filter(User.id == id).first()
         if target == None:
-            resp = make_response({"error":"Item not found"}, 404)
+            resp = make_response({"error":"User not found"}, 404)
             return resp
         else:
             data = request.get_json()
@@ -335,7 +287,7 @@ class GetUserByID(Resource):
     def delete(self, id):
         target = User.query.filter(User.id == id).first()
         if target == None:
-            resp = make_response({"error":"Item not found in cart"}, 404)
+            resp = make_response({"error":"User not found"}, 404)
             return resp
         else:
             db.session.delete(target)

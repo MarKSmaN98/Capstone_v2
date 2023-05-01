@@ -4,6 +4,14 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from sqlalchemy import MetaData
+from sqlalchemy.ext.associationproxy import _AssociationList
+from flask.json.provider import JSONProvider
+
+class CustomJSONEncoder(JSONProvider):
+    def default(self, obj):
+        if isinstance(obj, _AssociationList):
+            return list(obj)
+        return super().default(obj)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
