@@ -4,7 +4,6 @@ import { UserContext } from '../context/user';
 function Login () {
     const [changeForm, setchangeForm] = useState(true); //true = login, false = signup
     const {user, setUser} = useContext(UserContext)
-    console.log('log status from app:', user)
 
     let handleSubmitLogin = (e) => {
         e.preventDefault();
@@ -33,7 +32,6 @@ function Login () {
             
         })
         .then(rbody => {
-            console.log(rbody);
             setUser(rbody)
         })
     }

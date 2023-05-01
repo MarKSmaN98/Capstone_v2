@@ -35,6 +35,11 @@ api.add_resource(Logout, '/logout')
 
 class CheckSession(Resource):
     def get(self):
+    #     user = User.query.filter(User.id == session.get('user_id')).first()
+    #     if user:
+    #         return user.to_dict()
+    #     else:
+    #         return {'message': session.get('user_id')}, 401
         user = User.query.filter(User.id == session.get('user_id')).first()
         if user:
             return user.to_dict()
