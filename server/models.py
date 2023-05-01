@@ -28,13 +28,12 @@ class User(db.Model, SerializerMixin):
     
     @password.setter
     def password(self, password):
-        password_hash = bcrypt.generate_password_hash(
-            password.encode('utf-8'))
-        self.password = password_hash.decode('utf-8')
+        password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+        self._password = password_hash.decode('utf-8')
     
-    def authenticate(self, password):
+    def authenticate(self, attempt):
         return bcrypt.check_password_hash(
-            self.password, password.encode('utf-8')
+            self._password, attempt.encode('utf-8')
         )
 
 class Cart(db.Model, SerializerMixin):

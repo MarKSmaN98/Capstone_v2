@@ -13,6 +13,7 @@ class Login(Resource):
     def post(self):
         print(request.get_json())
         user = User.query.filter(User.username == request.get_json()['username']).first()
+        session['user_id'] = user.id
         password = request.get_json()['password']
         if user == None:
             resp = make_response({'error':'User Not Found'}, 401)
@@ -38,7 +39,7 @@ class CheckSession(Resource):
         if user:
             return user.to_dict()
         else:
-            return {'message': '401: Not Authorized'}, 401
+            return {'message': session.get('user_id')}, 401
 api.add_resource(CheckSession, '/check')           
 
 #Cart

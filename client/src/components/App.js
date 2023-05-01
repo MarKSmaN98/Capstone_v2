@@ -26,9 +26,11 @@ function App() {
           else {
             setisLoggedIn(false);
           }
+          return r.json()
         })
-        .then(() => {
+        .then(body => {
           setisWaiting(false)
+          console.warn(body)
         })
     }
     checkLogin();
