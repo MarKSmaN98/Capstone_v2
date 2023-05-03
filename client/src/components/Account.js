@@ -1,8 +1,9 @@
-import {useContext} from 'react'
+import {useContext, useState} from 'react'
 import { Navigate } from 'react-router-dom'
 import { UserContext } from '../context/user'
 function Account () {
     const {user, setUser} = useContext(UserContext)
+    const [showEdit, setShowEdit] = useState(false)
 
     if (user !== null) {
         document.title=`${user.name}'s Account`
@@ -18,6 +19,44 @@ function Account () {
             })
         console.log('logout')
     }
+
+    let handleEdit = (e) => {   
+        e.preventDefault()
+        e.target.reset()
+        console.log((e.target[0].value))
+        if (e.target.name.value == '') {e.target.name.value = user.name}
+        if (e.target.username.value == '') {e.target.username.value = user.username}
+        if (e.target.email.value == '') {e.target.email.value = user.email}
+        if (e.target.age.value == '') {e.target.age.value = user.age}
+        console.log(e.target.name.value)
+        console.log(e.target.username.value)
+        console.log(e.target.email.value)
+        console.log(e.target.age.value)
+        fetch(`/users/${user.id}`, {
+                method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'name': e.target.name.value,
+                'username': e.target.username.value,
+                'email': e.target.email.value,
+                'age': e.target.age.value
+            })
+        }).then(r => {
+            if (r.ok) {
+                return r.json()
+            }
+            else {
+                //alert('something went wrong!')
+            }
+        }).then(body => {
+            if (body) {
+                setUser(body)
+            }
+        })
+        setShowEdit(!showEdit)
+    }
     
     let loggedinDisp = () => {
         return (
@@ -26,7 +65,20 @@ function Account () {
                 <br></br>
                 <button onClick={() => {logoutHandler()}}>Log Out</button>
                 <div className='acountInfo'>
-                    
+                    <h2 hidden={showEdit}>Name: {user.name}</h2>
+                    <h2 hidden={showEdit}>Username: {user.username}</h2>
+                    <h2 hidden={showEdit}>Email: {user.email}</h2>
+                    <h2 hidden={showEdit}>Account Type: {user.account_type == 0? 'User' : 'Seller'}</h2>
+                    <h2 hidden={showEdit}>Age: {user.age}</h2>
+                    <button hidden={showEdit} onClick={() => setShowEdit(!showEdit)}>Edit</button>
+                    <form onSubmit={handleEdit}>
+                    <h2 hidden={!showEdit}>Name: <input name='name' placeholder={user.name}></input></h2>
+                    <h2 hidden={!showEdit}>Username: <input name='username' placeholder={user.username}></input></h2>
+                    <h2 hidden={!showEdit}>Email: <input name='email' placeholder={user.email}></input></h2>
+                    <h2 hidden={!showEdit}>Age: <input name='age' placeholder={user.age}></input></h2>
+                    <h2 hidden={!showEdit}>Change Password: <input name='password'></input></h2>
+                    <button hidden={!showEdit}>Submit</button>
+                    </form>
                 </div>
             </>
         )
