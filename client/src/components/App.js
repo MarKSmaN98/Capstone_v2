@@ -1,6 +1,6 @@
 //Mark Coats Capstone Project 03/25/2023
-import {React, useState, useRef, useContext, useEffect} from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {React, useState} from 'react';
+import {Routes, Route, Navigate} from 'react-router-dom';
 import Cart from './Cart';
 import Homepage from './Homepage';
 import Navbar from './Navbar';
@@ -9,18 +9,27 @@ import Account from './Account'
 import Login from './Login'
 import '../App.css';
 import { UserProvider } from '../context/user';
-
+import CheckUser from './CheckUser';
+//setIsLogged={setIsLogged}
 function App() {
   document.title = "Mark's Site";
+  const [isLogged, setIsLogged] = useState(null)
+  // if (!isLogged) {
+  //   return (<Navigate replace to='/checkuser' />)
+  // }
 
   return (
       <div className="App">
-        <Navbar />
         <UserProvider>
+        <Navbar />
           <Routes>
             <Route 
-              element={< Homepage />}
+              element={< CheckUser setIsLogged={setIsLogged}/>}
               path='/'
+              />
+            <Route 
+              element={< Homepage />}
+              path='/home'
               />
             <Route 
               element={< Products />}

@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom'
 import { UserContext } from '../context/user'
 function Account () {
     const {user, setUser} = useContext(UserContext)
-    fetch('http://localhost:5555/check').then(r => r.json()).then(body => console.log(body))
 
     if (user !== null) {
         document.title=`${user.name}'s Account`
@@ -12,9 +11,10 @@ function Account () {
 
     let logoutHandler = () => {
         fetch('/logout', {method: 'DELETE'})
-            .then(r => {})
-            .then(() => {
-                setUser(null)
+            .then(r => {
+                if (r.ok) {
+                    setUser(null)
+                }
             })
         console.log('logout')
     }

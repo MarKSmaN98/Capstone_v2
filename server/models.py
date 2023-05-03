@@ -38,7 +38,7 @@ class User(db.Model, SerializerMixin):
 
 class Cart(db.Model, SerializerMixin):
     __tablename__ = 'carts'
-    serialize_rules = ('-cart_items', '-user', 'items')
+    serialize_rules = ('cart_items', '-user', 'items')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -83,7 +83,7 @@ class Item (db.Model, SerializerMixin):
 
 class CartItem(db.Model, SerializerMixin):
     __tablename__ = 'cart_items'
-    serialize_rules = ('-cart.cart_items', '-item.cart_items', '-cart', '-item.cart', '-cart_id')
+    serialize_rules = ('-cart.cart_items', '-item.cart_items', '-cart', '-item.cart', 'cart_id', 'cart.id')
 
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)

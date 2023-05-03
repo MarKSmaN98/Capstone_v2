@@ -3,6 +3,7 @@ from flask_restful import Resource
 from config import app, db, api
 from models import User, Cart, Item, CartItem
 from flask_bcrypt import Bcrypt
+import ipdb
 
 
 #Routes_____________________________________________
@@ -11,12 +12,12 @@ class Login(Resource):
     # def get(self):
     #     pass
     def post(self):
+        # ipdb.set_trace()
         print(request.get_json())
         user = User.query.filter(User.username == request.get_json()['username']).first()
-        session['user_id'] = user.id
         password = request.get_json()['password']
         if user == None:
-            resp = make_response({'error':'User Not Found'}, 401)
+            resp = make_response({'error':'User Not Found'}, 404)
             return resp
         else:
             if user.authenticate(password):
@@ -63,7 +64,8 @@ class GetCart(Resource):
         return resp
     def post(self):
         new = Cart(
-            name = request.get_json()['name']
+            name = request.get_json()['name'],
+            user_id = request.get_json()['user_id']
         )
         db.session.add(new)
         try:
@@ -235,7 +237,7 @@ class GetCIIDByCandI(Resource):
     def get(self, cart, item):
         target = CartItem.query.filter(CartItem.cart_id == cart, CartItem.item_id == item).first()
         if target == None:
-            return {'error':'nothing found'}, 401
+            return {'error':'nothing found'}, 404
         resp = make_response(jsonify(target.id), 200) 
         return resp
 api.add_resource(GetCIIDByCandI, '/getCIID/<int:cart>/<int:item>')

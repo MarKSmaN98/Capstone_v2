@@ -12,6 +12,7 @@ flask-cors = "*"
 sqlalchemy-serializer = "*"
 flask-ext = "*"
 flask-bcrypt = "*"
+ipdb = "*"
 
 [dev-packages]
 

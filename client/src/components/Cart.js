@@ -1,93 +1,226 @@
-import { useContext, useState, useEffect,  Suspense } from "react"
-import { Await } from "react-router-dom"
+import { useContext, useState, useEffect} from "react"
 import { UserContext } from "../context/user"
 
 function Cart () {
     document.title='Cart'
-    const {user} = useContext(UserContext)
-    const [carts, setCarts] = useState([])
-    const [currentCart, setCurrentCart] = useState({})
-    const [iswaiting, setiswaiting] = useState(true)
-    const [stateItems, setStateItems] = useState([])
+    const {user, setUser} = useContext(UserContext)
+    const [carts, setCarts] = useState([{'name': 'GuestCart'}])
+    const [currentCart, setCurrentCart] = useState({
+        'name': 'defaultCart', 
+        'items':[{'name':'deflt item'}]
+    })
+    const [stateItems, setStateItems] = useState([{'name':''},{}])
     useEffect(() => {
-        let userCarts = user.user_carts
-        setCarts(userCarts)
-            //Want to rant... I stg I was getting a 500 server error with this fetch, _AssociationList is not JSON serializable
-            //So I spent an hour trying to figure out how to get around the problem, from making my own JSON serializer to using a custom to_dict method
-            // part of my issue was thinking I had debug set to true on my flask server, but the most infuriating part is I realized I messed up and deleted
-            //my association proxy while editing the model, so I just CTRL+Z'd until I got back to the original code.... AND IT WORKED FINE
-            //OH MY GOD IT WORKED JUST FINE WHAT WAS WRONG IM SO MAD AAAAAAAAAAAAA
-            //like literally I just used CTRL+Z so I know the code is exactly how it was.... but it works just fine now. Coding WILL give me anger issues eventually
+        if (!user) {
+            fetch('/check').then(r => {
+                if (r.ok) {
+                    return r.json();
+                }
+                else {
+                    setUser({
+                        'name': 'Guest',
+                        'user_carts': [
+                            {
+                                'name': 'GuestCart',
+                                'items': []
+                            }
+                        ]
+                    });
+                    console.log('welcome, guest');
+                }
+            })
+            .then(body => {
+                setUser(body);
+                setCarts(body.user_carts)
+                setCurrentCart(body.user_carts[0])
+                
+            })
+        }
+        else{
+            setCarts(user.user_carts)
+            setCurrentCart(user.user_carts[0])
+            setStateItems(user.user_carts[0].items)
+        }
 
-            }, [])
-    if(iswaiting) {
-        return (<></>)
+    },[user])
+
+
+    if (!user) {
+        return (<>noUser</>)
     }
 
-    let renderCartList = carts.map(
-        (cart) => {
-            return (<option key={`cart${cart.id}`} value={cart.id}>{cart.name}</option>)
+    let cartList = carts.map((cart) => {
+        return (<option value={cart.id-1}>{cart.name}</option>)
+    })
+
+    let patchQuant = (item, dir) => {
+        console.log('pq called')
+        try {
+            for (let ci in currentCart.cart_items) {
+                if (currentCart.cart_items[ci].item.id == item) {
+                    let target = currentCart.cart_items[ci];
+                    let quantity = target.quantity
+                    fetch(`/cart_items/${target.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'quantity': (quantity + dir)
+                        })
+                    })
+                        .then(r => r.json())
+                        .then(body => {
+                            console.log(body)
+                            let temp = {...currentCart}
+                            temp.cart_items[ci].quantity = quantity + dir
+                            setCurrentCart(temp)
+                        })
+                }
+            }
         }
-    )
-    
-    let handleDelete = (e) => {
-        let ciid = fetch(`/getCIID/${currentCart.id}/${e.target.id}`)
-            .then(r => r.json())
-            .then(body => {
-                console.log(body)
-                fetch(`/cart_items/${body}`, {
-                    method:'DELETE'
-                })
-                let temp = [...stateItems].pop(e.target.id -1)
-                setStateItems(temp)
-            })
+        catch {
+            return 0
+        }
         
     }
 
-    let updateQuantity = (e) => {
+    let getQuant = (item) => {
+        try {
+            for (let ci in currentCart.cart_items) {
+                if (currentCart.cart_items[ci].item.id == item) {
+                    return currentCart.cart_items[ci].quantity
+                }
+            }
+        }
+        catch {
+            return ''
+        }
+        
+    }
+
+    
+    let handleDel = (e) => {
+        try {
+            for (let ci in currentCart.cart_items) {
+                if (currentCart.cart_items[ci].item.id == e.target.id) {
+                    let target = currentCart.cart_items[ci];
+                    fetch(`/cart_items/${target.id}`, {
+                        method: 'DELETE'
+                    }).then(r => {
+                        if (r.ok) {
+                            let temp = [...stateItems]
+                            temp.pop(e.target.id)
+                            setStateItems(temp)
+                        }
+                    })
+                }
+            }
+        }
+        catch {
+            return 0
+        }
+    }
+
+    let handleUp = (e) => {
+        console.log(e.target.id)
+        patchQuant(e.target.id, 1)
+    }
+
+    let handleDown = (e) => {
+        let q = getQuant(e.target.id) - 1
+        console.log('q',q)
+        if (q < 1) {
+            handleDel(e)
+        }
+        else {
+            patchQuant(e.target.id, -1)
+        }
+    }
+
+    let handleDelCart = () => {
+        let target = currentCart.id
+        console.log('target', target)
+        fetch(`/cart/${target}`, {
+            method: 'DELETE'
+        }).then(r => {
+            if (r.ok) {
+                let temp = [...carts]
+                temp.pop(target-1)
+                setCarts(temp)
+                setCurrentCart(carts[0])
+                setStateItems(carts[0].items)
+            }
+        })
 
     }
-    
-    console.log('error log' ,stateItems)
-    let renderItemList = stateItems.map((item) => {
+
+    let handleAddCart = () => {
+        let num = carts.length
+        console.log(num)
+        fetch('/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'name': `Cart${num+1}`,
+                'user_id': user.id
+            })
+        })
+                .then(r => {
+                    if (r.ok) {
+                        return r.json()
+                    }
+                })
+                .then(body => {
+                    if (body) {
+                        let temp = [...carts]
+                        temp.push(body)
+                        setCarts(temp)
+                    }
+                    else {
+                        console.warn('cart not added')
+                    }
+                })
+    }
+
+    let handleDropChange = (e) => {
+        setCurrentCart(carts[e.target.value])
+        setStateItems(carts[e.target.value].items)
+    }
+
+    let renderCart = stateItems.map((item) => {
         return (
-            <div key={`itemlist${item.id}`}>
-                {item.title}
-                {item.price}
-                {item.img}
-                <button id={item.id} onClick={handleDelete}>Delete</button>
-                <button onClick={updateQuantity}></button>
+            <div className="itemContainer" id={item.id} key={`itemcont${item.id}`}>
+                <h3>{item.title}</h3>
+                <p>{item.price}</p>
+                <p>{getQuant(item.id)}</p>
+                <button id={item.id} onClick={handleDel}>Delete</button>
+                <button id={item.id} onClick={handleUp}>/\</button>
+                <button id={item.id} onClick={handleDown}>\/</button>
             </div>
         )
     })
 
-    let handleSelectChange = (e) => {
-        console.log('stateItems', stateItems)
-        setCurrentCart(carts[e.target.value -1])
-        console.log(e.target.value-1, '= cartiD')
-        setStateItems(currentCart.items)
-        console.log(stateItems)
-        fetch('http://localhost:5555/check').then(r => r.json()).then(body => console.log(body))
-    }
-
     return (
-        <>
-            <div className="CartListContainer">
-                <select onChange={handleSelectChange} defaultValue={'1'}>
-                    {renderCartList}
+        <div className="CartPage" >
+            <div className="dropDown">
+                <select onChange={handleDropChange} defaultValue={0}>
+                    {cartList}
                 </select>
             </div>
-            <div className="CartDetails">
-                <h2>{currentCart.name}</h2>
-                <div className="ItemListContainer">
-                    {iswaiting? <>listPlaceholder</> : renderItemList}
-                </div>
-
+            <br></br>
+            <div className='cartDetails'>
+                {renderCart}
             </div>
-            <div className="Options">
-
+            <div>
+                <br></br>
+                <br></br>
+                <button onClick={handleDelCart}>Delete Cart</button>
+                <button onClick={handleAddCart}>Add Cart</button>
             </div>
-        </>
+        </div>
     )
 }
 

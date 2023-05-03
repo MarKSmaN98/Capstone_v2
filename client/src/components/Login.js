@@ -10,7 +10,7 @@ function Login () {
         let front_username = e.target.username.value;
         let password = e.target.password.value;
         console.log(front_username + ' ' + password);
-        fetch('http://localhost:5555/backlogin', {
+        fetch('/backlogin', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
