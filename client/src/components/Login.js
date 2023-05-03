@@ -9,7 +9,6 @@ function Login () {
         e.preventDefault();
         let username = e.target.username.value;
         let password = e.target.password.value;
-        console.log(username + ' ' + password);
         fetch('/backlogin', {
             method:'POST',
             headers: {
@@ -45,7 +44,6 @@ function Login () {
         let email= e.target.email.value;
         let password= e.target.password.value;
         let accountType = e.target.accountType.value;
-        console.log(accountType);
         fetch('/users', {
             method: 'POST',
             headers:{
@@ -72,7 +70,11 @@ function Login () {
                     'name': 'Default Cart',
                     'user_id': body.id
                 })
-            }).then(r => r.json()).then(body => console.log(body))
+            }).then(r => r.json()).then(body => {
+                if (body) {
+                    user.carts.push(body)
+                }
+            })
         })
         setchangeForm(!changeForm);
     }
@@ -144,7 +146,7 @@ function Login () {
             </div>
             <br></br>
             {changeForm? loginForm() : signupForm()}
-            {user? <Navigate replace to='/account'/> : console.log('')}
+            {user? <Navigate replace to='/account'/> : null}
         </div>
     )
 

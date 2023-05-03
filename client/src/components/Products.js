@@ -54,14 +54,10 @@ function Products () {
         let itemincart = currentCart.items.filter(item => {
             return (item.id == id)
         })
-        console.log(itemincart)
         if (itemincart.length > 0) {
-            console.log('item in cart')
             let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id)})
-            console.log(ciInternal, 'ciInternal')
 
             fetch(`/getCIID/${currentCart.id}/${id}`).then(r => r.json()).then(ciid => { //get id for cart_item
-                console.log(ciid)
                 fetch(`http://localhost:5555/cart_items/${ciid}`, { //update that cart_item >> quantity + 1
                     method: 'PATCH',
                     headers: {
@@ -82,7 +78,6 @@ function Products () {
         }
 
         else {
-            console.log('item not in cart')
             fetch('/cart_items', {
                 method: 'POST',
                 headers: {
@@ -96,11 +91,9 @@ function Products () {
                 })
             }).then(r => {
                 if (r.ok) {
-                    console.log('posted')
                     return r.json()
                 }
             }).then(body => {
-                console.log('current cart items before' ,currentCart.cart_items)
                 body.item_id = id
                 currentCart.cart_items.push(body)
                 currentCart.items.push(body.item)
@@ -119,7 +112,6 @@ function Products () {
             </div>
         )
     })
-    console.log('cart', currentCart.id)
     return (
         <div className="productPage">
             <div className="search">

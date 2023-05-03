@@ -55,7 +55,6 @@ function Cart () {
     })
 
     let patchQuant = (item, dir) => {
-        console.log('pq called')
         try {
             for (let ci in currentCart.cart_items) {
                 if (currentCart.cart_items[ci].item.id == item) {
@@ -72,7 +71,6 @@ function Cart () {
                     })
                         .then(r => r.json())
                         .then(body => {
-                            console.log(body)
                             let temp = {...currentCart}
                             temp.cart_items[ci].quantity = quantity + dir
                             setCurrentCart(temp)
@@ -126,13 +124,11 @@ function Cart () {
     }
 
     let handleUp = (e) => {
-        console.log(e.target.id)
         patchQuant(e.target.id, 1)
     }
 
     let handleDown = (e) => {
         let q = getQuant(e.target.id) - 1
-        console.log('q',q)
         if (q < 1) {
             handleDel(e)
         }
@@ -143,7 +139,6 @@ function Cart () {
 
     let handleDelCart = () => {
         let target = currentCart.id
-        console.log('target', target)
         fetch(`/cart/${target}`, {
             method: 'DELETE'
         }).then(r => {
@@ -160,7 +155,6 @@ function Cart () {
 
     let handleAddCart = () => {
         let num = carts.length
-        console.log(num)
         fetch('/cart', {
             method: 'POST',
             headers: {
@@ -195,7 +189,6 @@ function Cart () {
 
     let handleChangeName = (e) => {
         e.preventDefault()
-        console.log(e.target.name.value)
         fetch(`/cart/${currentCart.id}`, {
             method: 'PATCH',
             headers: {

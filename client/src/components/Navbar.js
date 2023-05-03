@@ -48,6 +48,7 @@ function Navbar () {
         <nav className='navbar navbar-dark-grey text-center'>
             <Link to='/' >Home</Link>
             <Link to='/products'>Products</Link>
+            <p id='filler'></p>
             <img src='../images/logo.png' />
             {user.account_type == 1? <Link to='/seller'>{`${user.name}'s products`}</Link> : null}
             <Link to='/cart'>Cart</Link>

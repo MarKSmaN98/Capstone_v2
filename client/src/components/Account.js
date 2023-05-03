@@ -43,20 +43,15 @@ function Account () {
                     setUser(null)
                 }
             })
-        console.log('logout')
     }
 
     let handleEdit = (e) => {   
         e.preventDefault()
         e.target.reset()
-        if (e.target.name.value == '') {e.target.name.value = user.name; console.log('name is null')}
-        if (e.target.username.value == '') {e.target.username.value = user.username; console.log('username is null')}
-        if (e.target.email.value == '') {e.target.email.value = user.email; console.log('email is null')}
-        if (e.target.age.value == '') {e.target.age.value = user.age; console.log('age is null')}
-        console.log(e.target.name.value)
-        console.log(e.target.username.value)
-        console.log(e.target.email.value)
-        console.log(e.target.age.value)
+        if (e.target.name.value == '') {e.target.name.value = user.name}
+        if (e.target.username.value == '') {e.target.username.value = user.username}
+        if (e.target.email.value == '') {e.target.email.value = user.email}
+        if (e.target.age.value == '') {e.target.age.value = user.age}
         fetch(`/users/${user.id}`, {
                 method: 'PATCH',
             headers: {
@@ -77,7 +72,6 @@ function Account () {
             }
         }).then(body => {
             if (body) {
-                console.log(body)
                 setUser(body)
             }
         })

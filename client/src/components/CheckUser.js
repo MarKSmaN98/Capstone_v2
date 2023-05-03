@@ -32,7 +32,6 @@ function CheckUser ({setIsLogged, toHome}) {
         .then(body => {
             setUser(body);
             setIsLogged(body);
-            console.log('checked user', body.name);
             
         })
     }
