@@ -25,6 +25,9 @@ function Account () {
                 Logged in!
                 <br></br>
                 <button onClick={() => {logoutHandler()}}>Log Out</button>
+                <div className='acountInfo'>
+                    
+                </div>
             </>
         )
     }

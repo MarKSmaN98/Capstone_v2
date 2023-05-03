@@ -57,7 +57,8 @@ function Products () {
         console.log(itemincart)
         if (itemincart.length > 0) {
             console.log('item in cart')
-            let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id && ci.cart.id == currentCart.id)})
+            let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id)})
+            console.log(ciInternal, 'ciInternal')
 
             fetch(`/getCIID/${currentCart.id}/${id}`).then(r => r.json()).then(ciid => { //get id for cart_item
                 console.log(ciid)
@@ -90,7 +91,8 @@ function Products () {
                 body: JSON.stringify({
                     'cart_id': currentCart.id,
                     'item_id': id,
-                    'quantity': 1
+                    'quantity': 1,
+                    'paid': false
                 })
             }).then(r => {
                 if (r.ok) {
@@ -98,11 +100,10 @@ function Products () {
                     return r.json()
                 }
             }).then(body => {
-                let target = currentCart.cart_items
-                console.log(target, 'before')
-                let y = target.push(body)
-                console.log('y', y)
-                console.log(target, 'after')
+                console.log('current cart items before' ,currentCart.cart_items)
+                body.item_id = id
+                currentCart.cart_items.push(body)
+                currentCart.items.push(body.item)
             })
         }
     }

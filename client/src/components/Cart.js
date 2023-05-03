@@ -109,6 +109,8 @@ function Cart () {
                         method: 'DELETE'
                     }).then(r => {
                         if (r.ok) {
+                            currentCart.cart_items.pop(ci)
+                            currentCart.items.pop(e.target.id)
                             let temp = [...stateItems]
                             temp.pop(e.target.id)
                             setStateItems(temp)

@@ -196,7 +196,8 @@ class GetCartItem(Resource):
             resp = make_response(new.to_dict(), 201)
             return resp
         except:
-            resp=make_response({'error':'Item not added to cart'}, 400)
+            resp = make_response({'error':'Item not added to cart'}, 400)
+            return resp
 api.add_resource(GetCartItem, '/cart_items')
 
 class GetCartItemById(Resource):
