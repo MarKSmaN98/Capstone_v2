@@ -10,6 +10,7 @@ import Login from './Login'
 import '../App.css';
 import { UserProvider } from '../context/user';
 import CheckUser from './CheckUser';
+import SellerPage from './SellerPage';
 //setIsLogged={setIsLogged}
 function App() {
   document.title = "Mark's Site";
@@ -23,10 +24,10 @@ function App() {
         <UserProvider>
         <Navbar />
           <Routes>
-            {/* <Route 
-              element={< CheckUser setIsLogged={setIsLogged}/>}
-              path='/'
-              /> */}
+            <Route 
+              element={< SellerPage/>}
+              path='/seller'
+              />
             <Route 
               element={< Homepage />}
               path='/'

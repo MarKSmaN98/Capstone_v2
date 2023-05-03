@@ -92,7 +92,7 @@ class GetCartById(Resource):
                 setattr(target, attr, data[attr])
             db.session.add(target)
             db.session.commit()
-            resp = make_response(target, 200)
+            resp = make_response(target.to_dict(), 200)
             return resp
     def delete(self, id):
         target = Cart.query.filter(Cart.id == id).first()

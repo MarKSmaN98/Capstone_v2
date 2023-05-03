@@ -10,6 +10,7 @@ function Cart () {
         'items':[{'name':'deflt item'}]
     })
     const [stateItems, setStateItems] = useState([{'name':''},{}])
+    const [showEdit, setShowEdit] = useState(false)
     useEffect(() => {
         if (!user) {
             fetch('/check').then(r => {
@@ -192,6 +193,45 @@ function Cart () {
         setStateItems(carts[e.target.value].items)
     }
 
+    let handleChangeName = (e) => {
+        e.preventDefault()
+        console.log(e.target.name.value)
+        fetch(`/cart/${currentCart.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'name': e.target.name.value})
+        }).then ( r => {
+            if (r.ok) {
+                return r.json()
+            }
+            else {
+                return null
+            }
+        }).then(body => {
+            if (body) {
+                let cartIndex = carts.findIndex((cart) => {
+                    return (cart.id == currentCart.id)
+                })
+                let temp = [...carts]
+                temp[cartIndex] = body
+                setCarts(temp)
+                setCurrentCart(body)
+            }
+        })
+        setShowEdit(false)
+    }
+
+    let editCart = () => {
+        return (
+            <form onSubmit={handleChangeName}>
+                <input name='name' placeholder={currentCart.name}></input>
+                <button type='submit'>Done</button>
+            </form>
+        )
+    }
+
     let renderCart = stateItems.map((item) => {
         return (
             <div className="itemContainer" id={item.id} key={`itemcont${item.id}`}>
@@ -214,6 +254,7 @@ function Cart () {
             </div>
             <br></br>
             <div className='cartDetails'>
+                {showEdit? editCart() : <h2 id={currentCart.id} onClick={() => setShowEdit(true)}>{currentCart.name}</h2>}
                 {renderCart}
             </div>
             <div>

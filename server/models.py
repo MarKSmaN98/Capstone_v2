@@ -21,6 +21,7 @@ class User(db.Model, SerializerMixin):
     account_type = db.Column(db.Integer, nullable=False, default=0) #0 is normal user, 1 is seller
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_carts = db.relationship('Cart', backref='user', lazy=True)
+    sellerItems = db.relationship('Item', backref='user', lazy=True)
 
     @hybrid_property
     def password(self):
@@ -71,13 +72,14 @@ class Cart(db.Model, SerializerMixin):
 
 class Item (db.Model, SerializerMixin):
     __tablename__ = 'items'
-    serialize_rules = ('-cart', '-cart_items')
+    serialize_rules = ('-cart', '-cart_items', '-user')
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     tags = db.Column(db.String, nullable=False) #eventually another table probably
     price = db.Column(db.Float, nullable=False)
     img = db.Column(db.String, nullable=False) #another table?
+    seller_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cart = association_proxy('cart_items', 'cart')
     cart_items = db.relationship('CartItem', backref='item')
 

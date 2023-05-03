@@ -83,6 +83,19 @@ function Account () {
         })
         setShowEdit(!showEdit)
     }
+
+    let delAccount = () => {
+        fetch(`http://localhost:5555/users/${user.id}`, {
+            method: 'DELETE'
+        }).then(r => {
+            if (r.ok) {
+                setUser(null)
+            }
+            else {
+                alert('something went wrong')
+            }
+        })
+    }
     
     let loggedinDisp = () => {
         return (
@@ -104,6 +117,7 @@ function Account () {
                     <h2 hidden={!showEdit}>Age: <input name='age' placeholder={user.age}></input></h2>
                     <h2 hidden={!showEdit}>Change Password: <input name='password'></input></h2>
                     <button hidden={!showEdit}>Submit</button>
+                    <button hidden={!showEdit} onClick={delAccount}>Delete Account</button>
                     </form>
                 </div>
             </>

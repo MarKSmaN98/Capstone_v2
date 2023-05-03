@@ -7,16 +7,16 @@ function Login () {
 
     let handleSubmitLogin = (e) => {
         e.preventDefault();
-        let front_username = e.target.username.value;
+        let username = e.target.username.value;
         let password = e.target.password.value;
-        console.log(front_username + ' ' + password);
+        console.log(username + ' ' + password);
         fetch('/backlogin', {
             method:'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'username':front_username,
+                'username':username,
                 'password':password
             })
         })
@@ -24,15 +24,16 @@ function Login () {
             e.target.password.value = '';
             if (r.ok) {
                 console.log('login r.ok', r.ok)
-                return r.json()
             }
-            else {
-                return ''
-            }
-            
+            return r.json()
         })
         .then(rbody => {
-            setUser(rbody)
+            if (rbody) {
+                console.log(rbody)
+                if(rbody.name) {
+                    setUser(rbody)
+                }
+            }
         })
     }
 
@@ -58,6 +59,20 @@ function Login () {
                 'password': password,
                 'type': accountType
             })
+        }).then(r => {
+            if (r.ok) {return r.json()}
+            else {alert('something went wrong')}
+        }).then(body => {
+            fetch('/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': 'Default Cart',
+                    'user_id': body.id
+                })
+            }).then(r => r.json()).then(body => console.log(body))
         })
         setchangeForm(!changeForm);
     }
