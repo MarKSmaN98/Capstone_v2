@@ -10,7 +10,7 @@ from config import bcrypt
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
-    serialize_rules = ('user_carts', '-cart.cart_user' )
+    serialize_rules = ('user_carts', '-cart.cart_user', '-_password')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)    

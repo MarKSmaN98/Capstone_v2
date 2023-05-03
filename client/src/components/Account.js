@@ -1,11 +1,37 @@
-import {useContext, useState} from 'react'
+import {useContext, useState, useEffect} from 'react'
 import { Navigate } from 'react-router-dom'
 import { UserContext } from '../context/user'
 function Account () {
     const {user, setUser} = useContext(UserContext)
     const [showEdit, setShowEdit] = useState(false)
 
-    if (user !== null) {
+    useEffect(() => {
+        if (!user) {
+            fetch('/check').then(r => {
+                if (r.ok) {
+                    return r.json();
+                }
+                else {
+                    setUser({
+                        'name': 'Guest',
+                        'user_carts': [
+                            {
+                                'name': 'GuestCart',
+                                'items': []
+                            }
+                        ]
+                    });
+                    console.log('welcome, guest');
+                }
+            })
+            .then(body => {
+                setUser(body);
+            })
+        }
+
+    },[])
+
+    if (user) {
         document.title=`${user.name}'s Account`
     }
 
@@ -23,11 +49,10 @@ function Account () {
     let handleEdit = (e) => {   
         e.preventDefault()
         e.target.reset()
-        console.log((e.target[0].value))
-        if (e.target.name.value == '') {e.target.name.value = user.name}
-        if (e.target.username.value == '') {e.target.username.value = user.username}
-        if (e.target.email.value == '') {e.target.email.value = user.email}
-        if (e.target.age.value == '') {e.target.age.value = user.age}
+        if (e.target.name.value == '') {e.target.name.value = user.name; console.log('name is null')}
+        if (e.target.username.value == '') {e.target.username.value = user.username; console.log('username is null')}
+        if (e.target.email.value == '') {e.target.email.value = user.email; console.log('email is null')}
+        if (e.target.age.value == '') {e.target.age.value = user.age; console.log('age is null')}
         console.log(e.target.name.value)
         console.log(e.target.username.value)
         console.log(e.target.email.value)
@@ -48,10 +73,11 @@ function Account () {
                 return r.json()
             }
             else {
-                //alert('something went wrong!')
+                alert('something went wrong!')
             }
         }).then(body => {
             if (body) {
+                console.log(body)
                 setUser(body)
             }
         })

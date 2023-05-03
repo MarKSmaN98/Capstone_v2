@@ -23,13 +23,13 @@ function App() {
         <UserProvider>
         <Navbar />
           <Routes>
-            <Route 
+            {/* <Route 
               element={< CheckUser setIsLogged={setIsLogged}/>}
               path='/'
-              />
+              /> */}
             <Route 
               element={< Homepage />}
-              path='/home'
+              path='/'
               />
             <Route 
               element={< Products />}
