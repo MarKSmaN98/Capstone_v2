@@ -9,7 +9,6 @@ import Account from './Account'
 import Login from './Login'
 import '../App.css';
 import { UserProvider } from '../context/user';
-import CheckUser from './CheckUser';
 import SellerPage from './SellerPage';
 //setIsLogged={setIsLogged}
 function App() {

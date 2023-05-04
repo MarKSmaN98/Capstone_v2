@@ -6,6 +6,7 @@ function SellerPage () {
     const {user, setUser} = useContext(UserContext)
     const [sellerProducts, setSellerProducts] = useState([])
     const [showEdit, setShowEdit] = useState(null)
+    const [hideAddItem, setHideAddItem] = useState(true)
     useEffect(() => {
         if (!user) {
             fetch('/check').then(r => {
@@ -76,15 +77,52 @@ function SellerPage () {
                 let index = sellerProducts.findIndex((prod) => {
                     return (prod.id == product.id)
                 })
-                let temp = [...sellerProducts]
-                temp[index] = body
                 user.sellerItems[index] = body
+                let temp = [...user.sellerItems]
                 setSellerProducts(temp)
                 //for some reason when deleting an item the new list of items will show that another item was deleted, but the patch went through correctly so reloading
                 //will show the right item deleted
             }
         })
         setShowEdit('false')
+    }
+
+    let handleAddItem = (e) => {
+        e.preventDefault()
+        fetch('/items', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'title': e.target.name.value,
+                'price': e.target.price.value,
+                'img': e.target.img.value,
+                'seller_id': user.id,
+                'tags': e.target.tags.value
+                // title=request.get_json()['title'],
+                // tags = request.get_json()['tags'],
+                // price=request.get_json()['price'],
+                // img=request.get_json()['img'],
+                // seller_id=request.get_json()['seller_id']
+            })
+        }).then(r => {
+            if (r.ok) {
+                return r.json()
+            }
+            else {
+                alert('error')
+                return null
+            }
+        }).then(body => {
+            if (body) {
+                user.sellerItems.push(body)
+                let tmp = [...user.sellerItems]
+                setSellerProducts(tmp)
+            }
+        })
+        setHideAddItem(true)
+        e.target.reset()
     }
 
     let sellerProductCart = user.sellerItems.map((product) => {
@@ -114,7 +152,17 @@ function SellerPage () {
 
     return (
         <div className="SellerPage" >
-            <div className="CardContainer" >
+            <div className="addContainer">
+                <button hidden={!hideAddItem} onClick={() => setHideAddItem(false)}>Add Item</button>
+                <form hidden={hideAddItem} onSubmit={handleAddItem} id='addSellerForm'>
+                    <h3>Item Name: <input name='name' required></input></h3>
+                    <h3>Item Price: <input name='price' required></input></h3>
+                    <h3>Image URL: <input name='img' required></input></h3>
+                    <h3>Item Tags: <input name='tags' required placeholder="tag, tag, tag, ..."></input></h3>
+                    <button type='submit'>Add Item</button>
+                </form>
+            </div>
+            <div className="Container" >
                 {sellerProductCart}
             </div>
         </div>

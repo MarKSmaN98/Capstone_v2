@@ -1,4 +1,3 @@
-import ProductCard from "./ProductCard"
 import { useContext, useState, useEffect } from "react"
 import { UserContext } from "../context/user"
 
@@ -43,10 +42,6 @@ function Products () {
 
     if (!user) {
         return (<div>...loading</div>)
-    }
-
-    let getCIID = (cart, item) => {
-        
     }
 
     let handleAddClick = (e) => {
@@ -123,7 +118,7 @@ function Products () {
             <div className="options">
     
             </div>
-            <div className="productContainer">
+            <div className="Container">
                 {renderProducts}
             </div>
         </div>

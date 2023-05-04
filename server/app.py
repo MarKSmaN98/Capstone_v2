@@ -129,7 +129,8 @@ class GetItem(Resource):
             title=request.get_json()['title'],
             tags = request.get_json()['tags'],
             price=request.get_json()['price'],
-            img=request.get_json()['img']
+            img=request.get_json()['img'],
+            seller_id=request.get_json()['seller_id']
         )
         db.session.add(new)
         try:

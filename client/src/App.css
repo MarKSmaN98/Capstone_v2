@@ -44,6 +44,79 @@
     
 }
 
-.App {
+.Container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+    row-gap: 10px;
+    height: 100rem;
+    
+}
+
+.productCard {
+    width: min-content;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+    align-items: center;
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+}
+
+.productCard img {
+    margin-top: 10px;
+    width: 100px;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search input {
+    width: 50rem;
+    text-align: center;
+    height: auto;
+    overflow: hidden
+
+}
+
+body {
+    height: 100vh;
+    width: 100%;
+    margin: 0px;
     background-color: lightgray;
+    overflow-x: hidden;
+}
+
+.WelcomePage {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    margin-bottom: 0px;
+    bottom: 0px;
+}
+
+.addContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.addContainer button {
+    width: 50vh;
+    margin-bottom: 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+}
+
+br {
+    height: 1px;
+    background-color: black;
 }

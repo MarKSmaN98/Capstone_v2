@@ -31,7 +31,9 @@ function Homepage () {
     },[])
 
     return (
-        <h1>{user? `Welcome ${user.name}` : 'Welcome Guest!'}</h1>
+        <div className="WelcomePage" >
+            <h1>{user? `Welcome, ${user.name}` : 'Welcome Guest!'}</h1>
+        </div>
     )
 }
 

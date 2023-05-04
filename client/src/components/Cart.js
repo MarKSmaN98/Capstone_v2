@@ -139,6 +139,7 @@ function Cart () {
 
     let handleDelCart = () => {
         let target = currentCart.id
+        //if last cart need to create a 'Default' cart so cart page doesn't error out
         fetch(`/cart/${target}`, {
             method: 'DELETE'
         }).then(r => {
@@ -189,6 +190,7 @@ function Cart () {
 
     let handleChangeName = (e) => {
         e.preventDefault()
+        if (e.target.name.value == '') {e.target.name.value = currentCart.name}
         fetch(`/cart/${currentCart.id}`, {
             method: 'PATCH',
             headers: {
@@ -246,7 +248,7 @@ function Cart () {
                 </select>
             </div>
             <br></br>
-            <div className='cartDetails'>
+            <div className='cartContainer'>
                 {showEdit? editCart() : <h2 id={currentCart.id} onClick={() => setShowEdit(true)}>{currentCart.name}</h2>}
                 {renderCart}
             </div>

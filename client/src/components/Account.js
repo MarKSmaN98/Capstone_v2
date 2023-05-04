@@ -47,7 +47,6 @@ function Account () {
 
     let handleEdit = (e) => {   
         e.preventDefault()
-        e.target.reset()
         if (e.target.name.value == '') {e.target.name.value = user.name}
         if (e.target.username.value == '') {e.target.username.value = user.username}
         if (e.target.email.value == '') {e.target.email.value = user.email}
@@ -73,6 +72,7 @@ function Account () {
         }).then(body => {
             if (body) {
                 setUser(body)
+                e.target.reset()
             }
         })
         setShowEdit(!showEdit)
