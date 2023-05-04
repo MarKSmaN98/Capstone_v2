@@ -10,13 +10,11 @@ import Login from './Login'
 import '../App.css';
 import { UserProvider } from '../context/user';
 import SellerPage from './SellerPage';
-//setIsLogged={setIsLogged}
+//setIsLogged={setIsLogged} setIsSeller={setIsSeller}
 function App() {
   document.title = "Mark's Site";
   const [isLogged, setIsLogged] = useState(null)
-  // if (!isLogged) {
-  //   return (<Navigate replace to='/checkuser' />)
-  // }
+  const [isSeller, setIsSeller] = useState(null)
 
   return (
       <div className="App">

@@ -7,7 +7,7 @@ function SellerPage () {
     const [sellerProducts, setSellerProducts] = useState([])
     const [showEdit, setShowEdit] = useState(null)
     const [hideAddItem, setHideAddItem] = useState(true)
-    useEffect(() => {
+    useEffect((user, setUser) => {
         if (!user) {
             fetch('/check').then(r => {
                 if (r.ok) {
@@ -18,12 +18,13 @@ function SellerPage () {
                 }
             })
             .then(body => {
-                if (body.account_type == 1) {
+                console.log(body.account_type)
+                if (body.account_type === 1) {
                     setUser(body)
                     setSellerProducts(body.sellerItems)
                 }
                 else {
-                    <Navigate replace to='/account' />
+                    return <Navigate replace to='/account' />
                 }
             })
         }
@@ -32,6 +33,9 @@ function SellerPage () {
 
     if (!user) {
         return (<div>loading...</div>)
+    }
+    if (user.account_type === 0) {
+        return <Navigate replace to='/account' />
     }
 
     let handleDelete = (product) => {
