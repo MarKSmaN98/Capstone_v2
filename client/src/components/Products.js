@@ -5,7 +5,8 @@ function Products () {
     const {user, setUser} = useContext(UserContext)
     const [carts, setCarts] = useState([{'name': 'default'}])
     const [currentCart, setCurrentCart] = useState({'name': 'default'})
-    const [searchState, setSearchState] = useState('')
+    const [searchArr, setSearchArr] = useState([])
+    const [searchQuery, setSearchQuery] = useState('')
     const [productList, setProductList] = useState([])
     useEffect(() => {
         fetch('/items').then(r => r.json()).then(body => {setProductList(body)})
@@ -96,8 +97,28 @@ function Products () {
         }
     }
 
+    let handleSearch = (query) => {
+        query = query.toLowerCase()
+        setSearchQuery(query)
+        let tmpArr = productList.filter(item => {
+            return (item.title.toLowerCase().includes(query))
+        })
+        setSearchArr(tmpArr)
+
+    }
+
 
     let renderProducts = productList.map((product) => {
+        return (
+            <div className="productCard" key={`productCard-${product.key}`}>
+                <img src={product.img} alt={product.img} />
+                <h2>{product.title}</h2>
+                <p>{product.price}</p>
+                <button id={product.id} onClick={handleAddClick}>Add to Cart</button>
+            </div>
+        )
+    })
+    let renderSearchProducts = searchArr.map((product) => {
         return (
             <div className="productCard" key={`productCard-${product.key}`}>
                 <img src={product.img} alt={product.img} />
@@ -111,7 +132,7 @@ function Products () {
         <div className="productPage">
             <div className="search">
                 <form id='searchform'>
-                    <input name='searchfield' placeholder="Search..."></input>
+                    <input onChange={e => handleSearch(e.target.value)} name='searchfield' placeholder="Search..."></input>
                     <button type='submit'>🔍</button>
                 </form>
             </div>
@@ -119,7 +140,7 @@ function Products () {
     
             </div>
             <div className="Container">
-                {renderProducts}
+                {searchQuery ==''?  renderProducts: renderSearchProducts}
             </div>
         </div>
     )
