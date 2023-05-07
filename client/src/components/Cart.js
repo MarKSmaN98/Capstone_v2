@@ -246,6 +246,7 @@ function Cart () {
                 })
     }
 
+    
     let handleDropChange = (e) => {
         setCurrentCart(carts[e.target.value])
         setStateItems(carts[e.target.value].items)
