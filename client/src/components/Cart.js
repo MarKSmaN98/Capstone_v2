@@ -31,13 +31,58 @@ function Cart () {
                 }
             })
             .then(body => {
+                if (body.user_carts.length == 0) {
+                    console.log('no user carts')
+                    fetch('/cart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({
+                            'name':'Default',
+                            'user_id': body.id
+                        })
+                    }).then(r => {
+                        if (r.ok) {
+                            return r.json()
+                        }
+                        else {return null}
+                    }).then(cart => {
+                        body.user_carts = [cart,]
+                        setCarts(cart)
+                        setCurrentCart(cart)
+                        setStateItems(cart.items)
+                    })
+                }
                 setUser(body);
                 setCarts(body.user_carts)
                 setCurrentCart(body.user_carts[0])
-                
             })
         }
         else{
+            if (user.user_carts.length == 0) {
+                console.log('no user carts')
+                fetch('/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':'application/json'
+                    },
+                    body: JSON.stringify({
+                        'name':'Default',
+                        'user_id': user.id
+                    })
+                }).then(r => {
+                    if (r.ok) {
+                        return r.json()
+                    }
+                    else {return null}
+                }).then(cart => {
+                    user.user_carts = [cart,]
+                    setCarts(cart)
+                    setCurrentCart(cart)
+                    setStateItems(cart.items)
+                })
+            }
             setCarts(user.user_carts)
             setCurrentCart(user.user_carts[0])
             setStateItems(user.user_carts[0].items)
@@ -47,11 +92,17 @@ function Cart () {
 
 
     if (!user) {
+        console.log('no user')
         return (<>noUser</>)
     }
+    console.log('user carts',user.user_carts)
+
 
     let cartList = carts.map((cart) => {
-        return (<option value={cart.id-1}>{cart.name}</option>)
+        let index = user.user_carts.findIndex(cart2 => {
+            return cart.id == cart2.id
+        })
+        return (<option value={index}>{cart.name}</option>)
     })
 
     let patchQuant = (item, dir) => {
@@ -101,22 +152,30 @@ function Cart () {
     
     let handleDel = (e) => {
         try {
-            for (let ci in currentCart.cart_items) {
-                if (currentCart.cart_items[ci].item.id == e.target.id) {
-                    let target = currentCart.cart_items[ci];
-                    fetch(`/cart_items/${target.id}`, {
-                        method: 'DELETE'
-                    }).then(r => {
-                        if (r.ok) {
-                            currentCart.cart_items.pop(ci)
-                            currentCart.items.pop(e.target.id)
-                            let temp = [...stateItems]
-                            temp.pop(e.target.id)
-                            setStateItems(temp)
-                        }
-                    })
+            let cartIndex = user.user_carts.findIndex(cart => {
+                return cart.id == currentCart.id
+            })
+            let itemIndex = currentCart.items.findIndex((item) => {
+                return item.id == e.target.id
+            })
+            let ci = currentCart.cart_items.find(cart_item => {
+                return cart_item.item.id == e.target.id
+            })
+            let ciIndex = currentCart.cart_items.findIndex(cart_item => {
+                return cart_item.item.id == e.target.id
+            })
+            console.log(ci)
+            fetch(`/cart_items/${ci.id}`,{
+                method: 'DELETE'
+            }).then(r => {
+                if (r.ok) {
+                    user.user_carts[cartIndex].items.pop(itemIndex)
+                    //user.user_carts[cartIndex].cart_item.pop(ciIndex)
+                    let tmpList = [...stateItems]
+                    tmpList.pop(itemIndex)
+                    setStateItems(tmpList)
                 }
-            }
+            })
         }
         catch {
             return 0
@@ -138,17 +197,21 @@ function Cart () {
     }
 
     let handleDelCart = () => {
-        let target = currentCart.id
+        let index = carts.findIndex((cart) => {
+            return cart.id == currentCart.id
+        })
         //if last cart need to create a 'Default' cart so cart page doesn't error out
-        fetch(`/cart/${target}`, {
+        fetch(`/cart/${currentCart.id}`, {
             method: 'DELETE'
         }).then(r => {
             if (r.ok) {
-                let temp = [...carts]
-                temp.pop(target-1)
+                user.user_carts.pop(index)
+                let tempList = Array([...user.user_carts])
+                let temp = [...tempList[index]]
+                temp.pop(index)
                 setCarts(temp)
-                setCurrentCart(carts[0])
-                setStateItems(carts[0].items)
+                setCurrentCart(temp[0])
+                setStateItems(temp[0].items)
             }
         })
 
@@ -173,8 +236,8 @@ function Cart () {
                 })
                 .then(body => {
                     if (body) {
-                        let temp = [...carts]
-                        temp.push(body)
+                        user.user_carts.push(body)
+                        let temp = [...user.user_carts]
                         setCarts(temp)
                     }
                     else {
@@ -250,7 +313,7 @@ function Cart () {
             <br></br>
             <div className='cartContainer'>
                 {showEdit? editCart() : <h2 id={currentCart.id} onClick={() => setShowEdit(true)}>{currentCart.name}</h2>}
-                {renderCart}
+                {currentCart.items.length == 0? 'no items' : renderCart}
             </div>
             <div>
                 <br></br>

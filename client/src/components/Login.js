@@ -125,9 +125,6 @@ function Login () {
                         <option value='0'>Shopper</option>
                         <option value='1'>Seller</option>
                     </select>
-                    <br></br>
-                    <br></br>
-                    <br></br>
                     <button type='submit'>Create Account</button>
 
                 </form>

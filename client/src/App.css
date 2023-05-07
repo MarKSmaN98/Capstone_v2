@@ -11,6 +11,7 @@
     height: 40px;
     width: auto;
     padding:0px;
+    border-radius: 5px;
 }
 
 .navbar a {
@@ -19,7 +20,7 @@
     background-color: rgb(30, 30, 78);
     padding: 10px;
     color: white;
-
+    border-radius: 5px;
 }
 
 
@@ -98,7 +99,9 @@ body {
 
 .WelcomePage {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    text-align: center;
     height: 100%;
     margin-bottom: 0px;
     bottom: 0px;
@@ -116,7 +119,21 @@ body {
     border-radius: 10px;
 }
 
-br {
-    height: 1px;
-    background-color: black;
+
+.FeaturedProducts {
+    margin-top: 100px;
+    background-color: darkgray;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 1000px;
+    gap: 40px;
+    margin-left: 0px;
+    align-self: center;
+    border-radius: 10px;
+}
+
+
+.WelcomeBanner {
+    justify-self:flex-start;
 }

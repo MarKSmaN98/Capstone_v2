@@ -45,12 +45,19 @@ function Products () {
         return (<div>...loading</div>)
     }
 
+    let cartList = carts.map((cart) => {
+        let index = user.user_carts.findIndex(cart2 => {
+            return cart.id == cart2.id
+        })
+        return (<option value={index}>{cart.name}</option>)
+    })
+
     let handleAddClick = (e) => {
         let id = e.target.id
         let itemincart = currentCart.items.filter(item => {
-            return (item.id == id)
+            return (item.id == id? true : false)
         })
-        if (itemincart.length > 0) {
+        if (itemincart) {
             let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id)})
 
             fetch(`/getCIID/${currentCart.id}/${id}`).then(r => r.json()).then(ciid => { //get id for cart_item
@@ -135,6 +142,9 @@ function Products () {
                     <input onChange={e => handleSearch(e.target.value)} name='searchfield' placeholder="Search..."></input>
                     <button type='submit'>🔍</button>
                 </form>
+                <select onChange={e => setCurrentCart(e.target.value)}>
+                    {cartList}
+                </select>
             </div>
             <div className="options">
     

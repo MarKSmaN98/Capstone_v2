@@ -7,7 +7,7 @@ function SellerPage () {
     const [sellerProducts, setSellerProducts] = useState([])
     const [showEdit, setShowEdit] = useState(null)
     const [hideAddItem, setHideAddItem] = useState(true)
-    useEffect((user, setUser) => {
+    useEffect(() => {
         if (!user) {
             fetch('/check').then(r => {
                 if (r.ok) {
@@ -18,7 +18,6 @@ function SellerPage () {
                 }
             })
             .then(body => {
-                console.log(body.account_type)
                 if (body.account_type === 1) {
                     setUser(body)
                     setSellerProducts(body.sellerItems)
@@ -59,6 +58,7 @@ function SellerPage () {
         if (e.target.name.value == '') {e.target.name.value = product.title}
         if (e.target.price.value == '') {e.target.price.value = product.price}
         if (e.target.img.value == '') {e.target.img.value = product.img}
+        if (e.target.tags.value == '') {e.target.tags.value = product.tags}
         fetch(`/items/${product.id}`, {
             method: 'PATCH',
             headers: {
@@ -67,7 +67,8 @@ function SellerPage () {
             body: JSON.stringify({
                 'title': e.target.name.value,
                 'price': e.target.price.value,
-                'img': e.target.img.value
+                'img': e.target.img.value,
+                'tags': e.target.tags.value
             })
         }).then(r => {
             if (r.ok) {
@@ -83,6 +84,7 @@ function SellerPage () {
                 })
                 user.sellerItems[index] = body
                 let temp = [...user.sellerItems]
+                temp[index] = body
                 setSellerProducts(temp)
                 //for some reason when deleting an item the new list of items will show that another item was deleted, but the patch went through correctly so reloading
                 //will show the right item deleted
@@ -133,10 +135,13 @@ function SellerPage () {
         if (showEdit == product.id) {
             return (<div className="productCard" key={`product${product.id}`}>
                 <form onSubmit={ (e) => handleItemChange(e, product)} id={product.id}>
-                    <h2>Name: <input name='name' placeholder={product.title}></input></h2>
-                    <p>Price: <input name='price' placeholder={product.price}></input></p>
-                    <p>Image URL: <input name='img' placeholder={product.img}></input></p>
-                    <button typ='submit'>Done</button>
+                    <h2>Name: <input required name='name' defaultValue={product.title} ></input></h2>
+                    <p>Price: <input required name='price' defaultValue={product.price}></input></p>
+                    <p>Tags: <input required name='tags' defaultValue={product.tags}></input></p>
+                    <p>Image URL: <input required name='img' defaultValue={product.img}></input></p>
+                    <button typr='submit'>Done</button>
+                    <button onClick={() => setShowEdit(!showEdit)}>Cancel</button>
+                    
                 </form>
             </div>
             )}

@@ -55,3 +55,10 @@ function App() {
 }
 
 export default App;
+
+
+/**
+ * css styling
+ * del br tags
+ * validates for app
+ */

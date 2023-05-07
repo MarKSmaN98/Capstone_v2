@@ -79,7 +79,7 @@ function Account () {
     }
 
     let delAccount = () => {
-        fetch(`http://localhost:5555/users/${user.id}`, {
+        fetch(`/users/${user.id}`, {
             method: 'DELETE'
         }).then(r => {
             if (r.ok) {
