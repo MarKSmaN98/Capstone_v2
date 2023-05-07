@@ -46,7 +46,7 @@ class CheckSession(Resource):
             return user.to_dict()
         else:
             return {'message': session.get('user_id')}, 401
-api.add_resource(CheckSession, '/check')           
+api.add_resource(CheckSession, '/check')
 
 #Cart
 class GetCart(Resource):

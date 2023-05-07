@@ -20,9 +20,9 @@ class User(db.Model, SerializerMixin):
     _password = db.Column(db.String(120), nullable=False)
     account_type = db.Column(db.Integer, nullable=False, default=0) #0 is normal user, 1 is seller
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    user_carts = db.relationship('Cart', backref='user', lazy=True)
-    sellerItems = db.relationship('Item', backref='user', lazy=True)
-
+    user_carts = db.relationship('Cart', backref='user', lazy=True, cascade='all, delete')
+    sellerItems = db.relationship('Item', backref='user', lazy=True, cascade='all, delete')
+    #needs @validates
     @hybrid_property
     def password(self):
         return self._password
@@ -47,7 +47,7 @@ class Cart(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     items = association_proxy('cart_items', 'item')
-    cart_items = db.relationship('CartItem', backref='cart')
+    cart_items = db.relationship('CartItem', backref='cart', cascade='all, delete')
 
     def get_items(self):
         new_cart_items = CartItem.query.filter_by(cart_id=self.id).all()
