@@ -60,6 +60,31 @@ function Login () {
             else {
                 alert('something went wrong')}
         }).then(body => {
+
+            fetch('/backlogin', {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'username':username,
+                    'password':password
+                })
+            })
+            .then(r => {
+                e.target.password.value = '';
+                if (r.ok) {
+                }
+                return r.json()
+            })
+            .then(rbody => {
+                if (rbody) {
+                    if(rbody.name) {
+                        setUser(rbody)
+                    }
+                }
+            })
+
             fetch('/cart', {
                 method: 'POST',
                 headers: {
@@ -67,11 +92,11 @@ function Login () {
                 },
                 body: JSON.stringify({
                     'name': 'Default Cart',
-                    'user_id': body.id
+                    'user_id': user.id
                 })
             }).then(r => r.json()).then(body => {
                 if (body) {
-                    user.carts.push(body)
+                    user.user_carts.push(body)
                 }
             })
         })

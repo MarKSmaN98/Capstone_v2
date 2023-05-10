@@ -10,7 +10,7 @@ import ipdb
 
 @app.before_request
 def auth_user():
-    if not session.get('user_id') and request.endpoint not in ['items', 'login']:
+    if not session.get('user_id') and request.endpoint not in ['items', 'login', 'user']:
         resp = make_response({'error':'Not Authorized'}, 401)
         return resp
 
@@ -277,7 +277,7 @@ class GetUser(Resource):
             return resp
         except:
             resp=make_response({'error':'User not added'}, 400)
-api.add_resource(GetUser, '/users')
+api.add_resource(GetUser, '/users', endpoint='user')
 
 class GetUserByID(Resource):
     def get(self, id):

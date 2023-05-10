@@ -29,6 +29,23 @@ function Account () {
             })
         }
 
+        else if (user.user_carts.length == 0) {
+            fetch('/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'name': 'Default Cart',
+                    'user_id': user.id
+                })
+            }).then(r => r.json()).then(body => {
+                if (body) {
+                    user.user_carts.push(body)
+                }
+            })
+        }
+
     },[])
 
     if (user) {
