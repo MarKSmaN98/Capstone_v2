@@ -46,18 +46,14 @@ function Products () {
     }
 
     let cartList = carts.map((cart) => {
-        console.log(cart.name)
         let index = user.user_carts.findIndex(cart2 => {
             return cart.id == cart2.id
         })
-        console.log(index)
         return (<option value={index}>{cart.name}</option>)
     })
 
     let handleAddClick = (e) => {
         let id = e.target.id
-        console.log(currentCart.items)
-        console.log(currentCart)
         let itemincart = currentCart.items.filter(item => {
             return (item.id == id)
         })
@@ -65,7 +61,7 @@ function Products () {
             let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id)})
 
             fetch(`/getCIID/${currentCart.id}/${id}`).then(r => r.json()).then(ciid => { //get id for cart_item
-                fetch(`http://localhost:5555/cart_items/${ciid}`, { //update that cart_item >> quantity + 1
+                fetch(`/cart_items/${ciid}`, { //update that cart_item >> quantity + 1
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -76,10 +72,10 @@ function Products () {
                         return r.json()
                     }
                     else {
-
+                        return null
                     }
                 }).then(body => {
-                    ciInternal[0].quantity += 1
+                    if (body) {ciInternal[0].quantity += 1}
                 })
             })
         }

@@ -131,6 +131,8 @@ class GetItem(Resource):
         resp = make_response(itemlist, 200)
         return resp
     def post(self):
+        print(request.get_json()['price'])
+        print(type(request.get_json()['price']))
         new = Item(
             title=request.get_json()['title'],
             tags = request.get_json()['tags'],

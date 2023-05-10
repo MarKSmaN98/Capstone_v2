@@ -1,6 +1,6 @@
-import { UserContext } from "../context/user"
-import { useState, useContext, useEffect} from 'react'
-import { Navigate } from "react-router-dom"
+import { UserContext } from "../context/user";
+import { useState, useContext, useEffect} from 'react';
+import { Navigate } from "react-router-dom";
 function Homepage () {
     const [productList, setProductList] = useState(null)
     const {user, setUser} = useContext(UserContext)
@@ -46,7 +46,13 @@ function Homepage () {
         return <>...loading...</>
     }
 
-    let renderFeature = productList.map(item => {
+    let featureList = []
+    for (let i = 0; i < 3; i ++) {
+        let index = Math.floor(productList.length * Math.random())
+        featureList.push(productList[index])
+    }
+
+    let renderFeature = featureList.map(item => {
         return (
             <div className="productCard">
                 <img src={item.img} alt={item.title}></img>
@@ -60,6 +66,7 @@ function Homepage () {
             <div className="WelcomeBanner" >
             <h1 >{user? `Welcome, ${user.name}` : 'Welcome Guest!'}</h1>
             </div>
+            <h2>Today's Featured Products!</h2>
             <div className="FeaturedProducts ">
                 {renderFeature}
             </div>

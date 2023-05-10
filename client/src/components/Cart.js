@@ -28,12 +28,10 @@ function Cart () {
                             }
                         ]
                     });
-                    console.log('welcome, guest');
                 }
             })
             .then(body => {
                 if (body.user_carts.length == 0) {
-                    console.log('no user carts')
                     fetch('/cart', {
                         method: 'POST',
                         headers: {
@@ -62,7 +60,6 @@ function Cart () {
         }
         else{
             if (user.user_carts.length == 0) {
-                console.log('no user carts')
                 fetch('/cart', {
                     method: 'POST',
                     headers: {
@@ -93,10 +90,8 @@ function Cart () {
 
 
     if (!user) {
-        console.log('no user')
         return (<>noUser</>)
     }
-    console.log('user carts',user.user_carts)
 
 
     let cartList = carts.map((cart) => {
@@ -159,16 +154,16 @@ function Cart () {
             let ci = currentCart.cart_items.find(cart_item => {
                 return cart_item.item.id == e.target.id
             })
-            console.log(ci)
+            let ciid = currentCart.cart_items.findIndex(cartitem => {
+                return cartitem.id == ci.id
+            })
             fetch(`/cart_items/${ci.id}`,{
                 method: 'DELETE'
             }).then(r => {
                 if (r.ok) {
                     let tmpList = [...stateItems]
-                    console.log('tempList', tmpList)
-                    console.log('index', itemIndex)
-                    console.log('tempList item', tmpList[itemIndex])
                     tmpList.pop(itemIndex)
+                    currentCart.cart_items.pop(ciid)
                     setStateItems(tmpList)
                 }
             })
@@ -291,7 +286,7 @@ function Cart () {
             <div className="itemContainer" id={item.id} key={`itemcont${item.id}`}>
                 <img src={item.img} alt={'Oops! Something went wrong!'}/>
                 <h3 id='name'>{item.title}</h3>
-                <p id='price'>{'$' + item.price}</p>
+                <p id='price'>{'$' + parseFloat(item.price).toFixed(2)}</p>
                 <p>{getQuant(item.id)}</p>
                 <button id={item.id} onClick={handleDel}>Delete</button>
                 <button id={item.id} onClick={handleUp}>/\</button>

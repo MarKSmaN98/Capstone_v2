@@ -81,12 +81,12 @@ class Item (db.Model, SerializerMixin):
     img = db.Column(db.String, nullable=False) #another table?
     seller_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     cart = association_proxy('cart_items', 'cart')
-    cart_items = db.relationship('CartItem', backref='item')
+    cart_items = db.relationship('CartItem', backref='item', cascade='all, delete')
 
-    @validates('price')
-    def val_price(price, key, self):
-        assert price > 0, 'Validation Error!'
-        return price
+    # @validates('price')
+    # def val_price(price, key, self):
+    #     assert int(price) > 0, 'Validation Error!'
+    #     return price
 
 class CartItem(db.Model, SerializerMixin):
     __tablename__ = 'cart_items'

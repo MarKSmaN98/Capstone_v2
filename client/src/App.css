@@ -63,7 +63,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     gap: 1px 1px;
-    overflow-y: hidden;
+    overflow: hidden;
     text-align: center;
     align-items: center;
     background-color: white;
@@ -88,6 +88,46 @@
 .productCard button {
     background-color: #B5D6B7;
 }
+
+.productCard * {
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.FeaturedProducts {
+    background-color: darkgray;
+    display: flex;
+    white-space: nowrap;
+    justify-content: space-evenly;
+    flex-flow: row nowrap;
+    overflow-x: auto;
+    width: 1000px;
+    gap: 40px;
+    align-self: center;
+    border-radius: 10px;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.FeaturedProducts * {
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.FeaturedProducts::-webkit-scrollbar {
+    display: none;
+  }
 
 .search {
     display: flex;
@@ -134,28 +174,9 @@ body {
 }
 
 
-.FeaturedProducts {
-    margin-top: 100px;
-    background-color: darkgray;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    width: 1000px;
-    gap: 40px;
-    margin-left: 0px;
-    align-self: center;
-    border-radius: 10px;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-.FeaturedProducts::-webkit-scrollbar {
-    display: none;
-  }
-
-
 .WelcomeBanner {
     justify-self:flex-start;
+    margin-bottom: 10%;
 }
 
 .cartContainer {

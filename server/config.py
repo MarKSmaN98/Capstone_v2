@@ -18,7 +18,7 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.secret_key='A1B2C3!'
+app.secret_key='EKr3ohxt05_rlr8-63cqa-qI_RNPws8d-AOC_BrmjxofJ9YzLhrqMHVwFGn2jZGj37RORnp_cnzFsz49'
 
 
 metadata = MetaData(naming_convention={
@@ -28,5 +28,7 @@ metadata = MetaData(naming_convention={
 db=SQLAlchemy(metadata=metadata)
 migrate = Migrate(app, db)
 db.init_app(app)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*",
+                             "methods": ["OPTIONS"],
+                             "supports_credentials": False}})
 api = Api(app)

@@ -22,13 +22,11 @@ function Login () {
         .then(r => {
             e.target.password.value = '';
             if (r.ok) {
-                console.log('login r.ok', r.ok)
             }
             return r.json()
         })
         .then(rbody => {
             if (rbody) {
-                console.log(rbody)
                 if(rbody.name) {
                     setUser(rbody)
                 }

@@ -88,6 +88,7 @@ function SellerPage () {
                 setSellerProducts(temp)
                 //for some reason when deleting an item the new list of items will show that another item was deleted, but the patch went through correctly so reloading
                 //will show the right item deleted
+                //can be worked around for now by deleting the last item in the list
             }
         })
         setShowEdit('false')
@@ -106,11 +107,6 @@ function SellerPage () {
                 'img': e.target.img.value,
                 'seller_id': user.id,
                 'tags': e.target.tags.value
-                // title=request.get_json()['title'],
-                // tags = request.get_json()['tags'],
-                // price=request.get_json()['price'],
-                // img=request.get_json()['img'],
-                // seller_id=request.get_json()['seller_id']
             })
         }).then(r => {
             if (r.ok) {
