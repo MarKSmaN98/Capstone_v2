@@ -8,6 +8,12 @@ import ipdb
 
 #Routes_____________________________________________
 
+@app.before_request
+def auth_user():
+    if not session.get('user_id') and request.endpoint not in ['items', 'login']:
+        resp = make_response({'error':'Not Authorized'}, 401)
+        return resp
+
 class Login(Resource):
     # def get(self):
     #     pass
@@ -26,7 +32,7 @@ class Login(Resource):
                 return resp
             else:
                 return {'error':'Invalid Password'}, 401
-api.add_resource(Login, '/backlogin')
+api.add_resource(Login, '/backlogin', endpoint='login')
 
 class Logout(Resource):
     def delete(self):
@@ -140,7 +146,7 @@ class GetItem(Resource):
         except:
             resp = make_response({'error':'Item not added'}, 400)
             return resp
-api.add_resource(GetItem, '/items')
+api.add_resource(GetItem, '/items', endpoint='items')
 
 class GetItemById(Resource):
     def get(self, id):

@@ -135,7 +135,7 @@ function SellerPage () {
         if (showEdit == product.id) {
             return (<div className="productCard" key={`product${product.id}`}>
                 <form onSubmit={ (e) => handleItemChange(e, product)} id={product.id}>
-                    <h2>Name: <input required name='name' defaultValue={product.title} ></input></h2>
+                    <h3>Name: <input required name='name' defaultValue={product.title} ></input></h3>
                     <p>Price: <input required name='price' defaultValue={product.price}></input></p>
                     <p>Tags: <input required name='tags' defaultValue={product.tags}></input></p>
                     <p>Image URL: <input required name='img' defaultValue={product.img}></input></p>
@@ -149,7 +149,7 @@ function SellerPage () {
             return (
             <div className="productCard" key={`product${product.id}`}>
                 <img src={product.img} alt={product.name}></img>
-                <h2>{product.title}</h2>
+                <h3>{product.title}</h3>
                 <p>{product.price}</p>
                 <button onClick={() => setShowEdit(product.id)}>Edit</button>
                 <button onClick={() => handleDelete(product)}>Delete</button>

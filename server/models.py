@@ -23,6 +23,16 @@ class User(db.Model, SerializerMixin):
     user_carts = db.relationship('Cart', backref='user', lazy=True, cascade='all, delete')
     sellerItems = db.relationship('Item', backref='user', lazy=True, cascade='all, delete')
     #needs @validates
+
+    @validates('email')
+    def val_email(self, key, email):
+        assert '@' in email, 'Invalid Address'
+        return email
+    @validates('age')
+    def val_age(self, key, age):
+        assert int(age) > 13, 'User must be over 13!'
+        return age
+
     @hybrid_property
     def password(self):
         return self._password
@@ -59,16 +69,6 @@ class Cart(db.Model, SerializerMixin):
         if target == None:
             return 0
         return target.quantity
-        
-
-    # def to_dict(self):
-    #     return {
-    #         'id': self.id,
-    #         'name': self.name,
-    #         'paid': self.paid,
-    #         'user_id': self.user_id,
-    #         'items': self.get_items()
-    #     }
 
 class Item (db.Model, SerializerMixin):
     __tablename__ = 'items'
@@ -83,6 +83,11 @@ class Item (db.Model, SerializerMixin):
     cart = association_proxy('cart_items', 'cart')
     cart_items = db.relationship('CartItem', backref='item')
 
+    @validates('price')
+    def val_price(price, key, self):
+        assert price > 0, 'Validation Error!'
+        return price
+
 class CartItem(db.Model, SerializerMixin):
     __tablename__ = 'cart_items'
     serialize_rules = ('-cart.cart_items', '-item.cart_items', '-cart', '-item.cart', 'cart_id', 'cart.id')
@@ -91,6 +96,11 @@ class CartItem(db.Model, SerializerMixin):
     quantity = db.Column(db.Integer, nullable=False, default=1)
     cart_id = db.Column(db.Integer, db.ForeignKey('carts.id'))
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
+
+    @validates('quantity')
+    def val_quant(self, key, quantity):
+        assert quantity > 0, 'Validation Error!'
+        return quantity
 
     def to_dict(self):
         return {

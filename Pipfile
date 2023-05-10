@@ -13,7 +13,7 @@ sqlalchemy-serializer = "*"
 flask-ext = "*"
 flask-bcrypt = "*"
 ipdb = "*"
-textual = "*"
+textual = {extras = ["dev"], version = "*"}
 
 [dev-packages]
 

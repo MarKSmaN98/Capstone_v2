@@ -59,7 +59,8 @@ function Login () {
             })
         }).then(r => {
             if (r.ok) {return r.json()}
-            else {alert('something went wrong')}
+            else {
+                alert('something went wrong')}
         }).then(body => {
             fetch('/cart', {
                 method: 'POST',

@@ -46,18 +46,22 @@ function Products () {
     }
 
     let cartList = carts.map((cart) => {
+        console.log(cart.name)
         let index = user.user_carts.findIndex(cart2 => {
             return cart.id == cart2.id
         })
+        console.log(index)
         return (<option value={index}>{cart.name}</option>)
     })
 
     let handleAddClick = (e) => {
         let id = e.target.id
+        console.log(currentCart.items)
+        console.log(currentCart)
         let itemincart = currentCart.items.filter(item => {
-            return (item.id == id? true : false)
+            return (item.id == id)
         })
-        if (itemincart) {
+        if (itemincart.length > 0) {
             let ciInternal = currentCart.cart_items.filter(ci => {return (ci.item_id == id)})
 
             fetch(`/getCIID/${currentCart.id}/${id}`).then(r => r.json()).then(ciid => { //get id for cart_item
@@ -120,7 +124,7 @@ function Products () {
             <div className="productCard" key={`productCard-${product.key}`}>
                 <img src={product.img} alt={product.img} />
                 <h2>{product.title}</h2>
-                <p>{product.price}</p>
+                <p>{'$'+product.price.toFixed(2)}</p>
                 <button id={product.id} onClick={handleAddClick}>Add to Cart</button>
             </div>
         )
@@ -130,7 +134,7 @@ function Products () {
             <div className="productCard" key={`productCard-${product.key}`}>
                 <img src={product.img} alt={product.img} />
                 <h2>{product.title}</h2>
-                <p>{product.price}</p>
+                <p>{'$'+product.price.toFixed(2)}</p>
                 <button id={product.id} onClick={handleAddClick}>Add to Cart</button>
             </div>
         )
@@ -142,7 +146,7 @@ function Products () {
                     <input onChange={e => handleSearch(e.target.value)} name='searchfield' placeholder="Search..."></input>
                     <button type='submit'>🔍</button>
                 </form>
-                <select onChange={e => setCurrentCart(e.target.value)}>
+                <select onChange={e => setCurrentCart(carts[e.target.value])}>
                     {cartList}
                 </select>
             </div>

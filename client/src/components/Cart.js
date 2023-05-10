@@ -1,13 +1,13 @@
 import { useContext, useState, useEffect} from "react"
 import { UserContext } from "../context/user"
+import Checkout from "./Checkout"
 
 function Cart () {
     document.title='Cart'
     const {user, setUser} = useContext(UserContext)
-    const [carts, setCarts] = useState([{'name': 'GuestCart'}])
+    const [carts, setCarts] = useState([])
     const [currentCart, setCurrentCart] = useState({
-        'name': 'defaultCart', 
-        'items':[{'name':'deflt item'}]
+        
     })
     const [stateItems, setStateItems] = useState([{'name':''},{}])
     const [showEdit, setShowEdit] = useState(false)
@@ -23,7 +23,8 @@ function Cart () {
                         'user_carts': [
                             {
                                 'name': 'GuestCart',
-                                'items': []
+                                'items': [],
+                                'cart_items': []
                             }
                         ]
                     });
@@ -152,16 +153,10 @@ function Cart () {
     
     let handleDel = (e) => {
         try {
-            let cartIndex = user.user_carts.findIndex(cart => {
-                return cart.id == currentCart.id
-            })
-            let itemIndex = currentCart.items.findIndex((item) => {
+            let itemIndex = stateItems.findIndex((item) => {
                 return item.id == e.target.id
             })
             let ci = currentCart.cart_items.find(cart_item => {
-                return cart_item.item.id == e.target.id
-            })
-            let ciIndex = currentCart.cart_items.findIndex(cart_item => {
                 return cart_item.item.id == e.target.id
             })
             console.log(ci)
@@ -169,9 +164,10 @@ function Cart () {
                 method: 'DELETE'
             }).then(r => {
                 if (r.ok) {
-                    user.user_carts[cartIndex].items.pop(itemIndex)
-                    //user.user_carts[cartIndex].cart_item.pop(ciIndex)
                     let tmpList = [...stateItems]
+                    console.log('tempList', tmpList)
+                    console.log('index', itemIndex)
+                    console.log('tempList item', tmpList[itemIndex])
                     tmpList.pop(itemIndex)
                     setStateItems(tmpList)
                 }
@@ -246,7 +242,6 @@ function Cart () {
                 })
     }
 
-    
     let handleDropChange = (e) => {
         setCurrentCart(carts[e.target.value])
         setStateItems(carts[e.target.value].items)
@@ -294,8 +289,9 @@ function Cart () {
     let renderCart = stateItems.map((item) => {
         return (
             <div className="itemContainer" id={item.id} key={`itemcont${item.id}`}>
-                <h3>{item.title}</h3>
-                <p>{item.price}</p>
+                <img src={item.img} alt={'Oops! Something went wrong!'}/>
+                <h3 id='name'>{item.title}</h3>
+                <p id='price'>{'$' + item.price}</p>
                 <p>{getQuant(item.id)}</p>
                 <button id={item.id} onClick={handleDel}>Delete</button>
                 <button id={item.id} onClick={handleUp}>/\</button>
@@ -311,14 +307,14 @@ function Cart () {
                     {cartList}
                 </select>
             </div>
-            <br></br>
             <div className='cartContainer'>
                 {showEdit? editCart() : <h2 id={currentCart.id} onClick={() => setShowEdit(true)}>{currentCart.name}</h2>}
-                {currentCart.items.length == 0? 'no items' : renderCart}
+                {currentCart.items? renderCart : 'no items'}
+            </div>
+            <div className="checkoutContainer">
+                <Checkout user={user} current={currentCart}/>
             </div>
             <div>
-                <br></br>
-                <br></br>
                 <button onClick={handleDelCart}>Delete Cart</button>
                 <button onClick={handleAddCart}>Add Cart</button>
             </div>
