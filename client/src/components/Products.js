@@ -104,6 +104,8 @@ function Products () {
         }
     }
 
+    document.title="Mark's Product Browser"
+
     let handleSearch = (query) => {
         query = query.toLowerCase()
         setSearchQuery(query)

@@ -197,8 +197,7 @@ function Cart () {
         }).then(r => {
             if (r.ok) {
                 user.user_carts.pop(index)
-                let tempList = Array([...user.user_carts])
-                let temp = [...tempList[index]]
+                let temp = [...carts]
                 temp.pop(index)
                 setCarts(temp)
                 setCurrentCart(temp[0])
@@ -267,6 +266,7 @@ function Cart () {
                 temp[cartIndex] = body
                 setCarts(temp)
                 setCurrentCart(body)
+                user.user_carts[cartIndex].name = body.name
             }
         })
         setShowEdit(false)

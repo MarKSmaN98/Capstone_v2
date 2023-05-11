@@ -30,7 +30,9 @@ class User(db.Model, SerializerMixin):
         return email
     @validates('age')
     def val_age(self, key, age):
-        assert int(age) > 13, 'User must be over 13!'
+        assert int(age) >= 13, 'User must be over 13!'
+        # if int(age) < 13:
+        #     raise ValueError("Age must be 13 or over!")
         return age
 
     @hybrid_property

@@ -1,27 +1,27 @@
 .navbar {
-    background-color: #B5D6B7;
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: row;
-    align-items: center;
-    height: 40px;
-    position: relative;
+  background-color: #B5D6B7;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  position: relative;
 }
 
 .navbar img{
-    height: 40px;
-    width: auto;
-    padding:0px;
-    border-radius: 5px;
+  height: 40px;
+  width: auto;
+  padding:0px;
+  border-radius: 5px;
 }
 
 .navbar a {
-    justify-content: space-between;
-    justify-self: center;
-    background-color: #5D8E5A ;
-    padding: 10px;
-    color: white;
-    border-radius: 5px;
+  justify-content: space-between;
+  justify-self: center;
+  background-color: #5D8E5A ;
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
 }
 
 
@@ -37,178 +37,243 @@
 .navbar a:active { text-decoration: none; }
 
 .loginMain {
-    background-color: lightgray;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    text-align: center;
-    height: 1080px;
+  display: flex;
+  flex-flow: column wrap;
+  background-image: url(../images/LoginCorrection.jpg);
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  height: 1080px;
+  overflow: hidden;
     
+}
+
+.loginCard {
+  align-self: center;
+  display: flex;
+  flex-flow: column wrap;
+  width: min-content;
+  min-width: 40%;
+  text-align: center;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 50%, rgba(255,255,255,0.5) 99%, rgba(255,255,255,0.1) 150%);
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  padding-bottom: 15px;
 }
 
 .Container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20px, 200px));
-    grid-gap: 20px;
-    margin: 1% 5%;
-    justify-self: center;
-    align-self: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 200px));
+  grid-gap: 20px;
+  margin: 1% 5%;
+  justify-self: center;
+  align-self: center;
     
 }
 
+.accountPage {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: hidden;
+  width: 100vw;
+  display: flex;
+  flex-flow: column wrap;
+  background-image: url('../images/Bags.jpg');
+  height: 100%;
+}
+
+#logout {
+  margin-top: 5px;
+  position: absolute;
+  right: 10px;
+  width: 100px;
+  height: 50px;
+  background-color: #5D8E5A;
+  border-radius: 5px;
+  color: white;
+  border: none;
+}
+
+.accountInfo {
+  margin-top: 100px;
+  align-self: center;
+  display: flex;
+  flex-flow: column wrap;
+  width: min-content;
+  min-width: 40%;
+  text-align: center;
+  align-items: center;
+  /* background-color: white; */
+  background: linear-gradient(rgba(255,255,255), rgb(220, 220, 220), lightgray);
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  padding-bottom: 15px;
+}
+
+.accountInfo button {
+  width: 25%;
+}
+
 .productCard {
-    width: 200px;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    gap: 1px 1px;
-    overflow: hidden;
-    text-align: center;
-    align-items: center;
-    background-color: white;
-    border-color: black;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 10px;
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
+  width: 200px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1px 1px;
+  overflow: hidden;
+  text-align: center;
+  align-items: center;
+  background-color: white;
+  border-color: black;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
 }
 
 .productCard img {
-    margin-top: 10px;
-    width: 100px;
+  margin-top: 10px;
+  width: 100px;
 }
 
 .productCard button {
-    background-color: #B5D6B7;
+  background-color: #B5D6B7;
 }
 
 .productCard * {
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 
 .FeaturedProducts {
-    background-color: darkgray;
-    display: flex;
-    white-space: nowrap;
-    justify-content: space-evenly;
-    flex-flow: row nowrap;
-    overflow-x: auto;
-    width: 1000px;
-    gap: 40px;
-    align-self: center;
-    border-radius: 10px;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
+  display: flex;
+  white-space: nowrap;
+  justify-content: space-evenly;
+  flex-flow: row nowrap;
+  overflow-x: auto;
+  width: 1000px;
+  gap: 40px;
+  align-self: center;
+  overflow: hidden;
+  border-radius: 10px;
+  /* background: linear-gradient(90deg, lightgray 1%, grey 50%, lightgray 99%); */
+  background: grey;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 
 .FeaturedProducts * {
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 
 .FeaturedProducts::-webkit-scrollbar {
-    display: none;
+  display: none;
   }
 
 .search {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .search input {
-    width: 50rem;
-    text-align: center;
-    height: auto;
-    overflow: hidden
-
+  width: 50rem;
+  text-align: center;
+  height: auto;
+  overflow: hidden
 }
 
 body {
-    height: 100vh;
-    width: 100%;
-    margin: 0px;
-    background-color: lightgray;
-    overflow-x: hidden;
+  height: 100vh;
+  width: 100%;
+  margin: 0px;
+  background-color: lightgray;
+  overflow-x: hidden;
 }
 
 .WelcomePage {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    height: 100%;
-    margin-bottom: 0px;
-    bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  margin-bottom: 0px;
+  bottom: 0px;
 }
 
 .addContainer {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .addContainer button {
-    width: 50vh;
-    margin-bottom: 15px;
-    margin-top: 5px;
-    border-radius: 10px;
+  width: 50vh;
+  margin-bottom: 15px;
+  margin-top: 5px;
+  border-radius: 10px;
 }
 
 
 .WelcomeBanner {
-    justify-self:flex-start;
-    margin-bottom: 10%;
+  justify-self:flex-start;
+  margin-bottom: 10%;
 }
 
 .cartContainer {
-    display: flex;
-    flex-flow: column wrap;
-    width: 45%;
+  display: flex;
+  flex-flow: column wrap;
+  width: 45%;
 }
 
 .itemContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: white;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
   }
 
   .checkoutContainer {
-    width: 30%;
-    position: absolute;
-    left: 50%;
-    top: 13%;
+  width: 30%;
+  position: absolute;
+  left: 50%;
+  top: 13%;
   }
 
   .Checkout {
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 10px;
   }
 
   .Checkout h2 {

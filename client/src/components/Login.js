@@ -166,7 +166,9 @@ function Login () {
                 <h1>Login Or Signup</h1>
             </div>
             <br></br>
-            {changeForm? loginForm() : signupForm()}
+            <div className='loginCard'>
+                {changeForm? loginForm() : signupForm()}
+            </div>
             {user? <Navigate replace to='/account'/> : null}
         </div>
     )

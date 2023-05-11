@@ -111,10 +111,8 @@ function Account () {
     let loggedinDisp = () => {
         return (
             <>
-                Logged in!
-                <br></br>
-                <button onClick={() => {logoutHandler()}}>Log Out</button>
-                <div className='acountInfo'>
+                <button id='logout' onClick={() => {logoutHandler()}}>Log Out</button>
+                <div className='accountInfo'>
                     <h2 hidden={showEdit}>Name: {user.name}</h2>
                     <h2 hidden={showEdit}>Username: {user.username}</h2>
                     <h2 hidden={showEdit}>Email: {user.email}</h2>
@@ -151,9 +149,7 @@ function Account () {
     let dispChange = user? loggedinDisp() : loggedoutDisp()
 
     return (
-        <div>
-            Account
-            <br></br>
+        <div className='accountPage'>
             {
                 dispChange
             }

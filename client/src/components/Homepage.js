@@ -46,6 +46,8 @@ function Homepage () {
         return <>...loading...</>
     }
 
+    document.title="Mark's Site"
+
     let featureList = []
     for (let i = 0; i < 3; i ++) {
         let index = Math.floor(productList.length * Math.random())

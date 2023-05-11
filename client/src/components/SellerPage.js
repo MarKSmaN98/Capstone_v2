@@ -37,6 +37,8 @@ function SellerPage () {
         return <Navigate replace to='/account' />
     }
 
+    document.title=`${user.name}'s Product Management`
+
     let handleDelete = (product) => {
         fetch(`/items/${product.id}`, {
             method: 'DELETE'
